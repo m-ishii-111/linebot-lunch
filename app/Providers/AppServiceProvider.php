@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Services\LineService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,12 +15,12 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         // LINE BOT
-        // $this->app->bind('line-bot', function ($app, array $parameters) {
-        //     return new LINEBot(
-        //       new LINEBot\HTTPClient\CurlHTTPClient(env('LINE_ACCESS_TOKEN')),
-        //       ['channelSecret' => env('LINE_CHANNEL_SERCRET')]
-        //     );
-        // });
+        $this->app->bind(LineService::class, function () {
+            return new LineService(
+                env('LINE_ACCESS_TOKEN'),
+                env('LINE_CHANNEL_SECRET')
+            );
+        });
     }
 
     /**

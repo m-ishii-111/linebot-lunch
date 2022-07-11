@@ -2,19 +2,24 @@
 
 namespace App\Serviecs;
 
-use LINE\LINEBot;
-use LINE\LINEBot\HTTPClient\CurlHTTPClient;
-
 class LineService
 {
-    public static function lineSdk()
+    private $accessToken;
+    private $channelSecret;
+    private $httpClient;
+    private $bot;
+
+    public function __construct($accessToken, $channelSecret)
     {
-        $token  = env('LINE_ACCESS_TOKEN');
-        $secret = env('LINE_CHANNEL_SERCRET');
+        $this->accessToken = $accessToken;
+        $this->channleSecret = $channelSecret;
+        $this->httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($this->accessToken);
+        $this->bot = new \LINE\LINEBot($this->httpClient, ['channelSecret' => $this->channelSecret]);
+    }
 
-        $httpClient = new CurlHTTPClient($token);
-        $bot = new LINEBot($httpClient, ['channelSecret' => $secret]);
-
-        return $bot;
+    public function SendReplyMessage($replyToken, string $text): \LINE\LINEBot\Response
+    {
+        $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($text);
+        return $this->bot->replyMessage($replyToken, $textMessageBuilder);
     }
 }

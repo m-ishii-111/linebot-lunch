@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Controllers\LineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,11 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return response()->json(200);
-});
-Route::post('/', function () {
-    return response()->json(200);
-});
-
-Route::post('line', 'App\Http\Controllers\LineController@post')->name('line.post');
+Route::post('line', [LineController::class, 'post'])->name('line.post');
