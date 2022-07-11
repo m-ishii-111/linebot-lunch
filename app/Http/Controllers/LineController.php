@@ -8,28 +8,28 @@ use LINE\LINEBot\SignatureValidator;
 
 class LineController extends Controller
 {
-    public function post()
+    public function post(Request $request)
     {
-        $signature = request()->header('X-Line-Signature');
-        $validateSignature = SignatureValidator::validateSignature($httpRequestBody, $channelSecret, $signature);
+        $signarure = $request->header('X-Line-Signature');
+        $validateSignature = SignatureValidator::validateSignature($httpRequestBody, $channelSecret, $signarure);
         if ($validateSignature) {
             return response()->json(200);
+            $bot = LineService::lineSdk();
+
+            try {
+                $events = $bot->perseEventRequest($httpRequestBody, $signature);
+                foreach ($events as $event) {
+                    // イベントごとの処理を書いていく
+                    if ($eveent instanceof LINE\LINEBot\Event\MessageEvent\TextMessage) {
+                        $bot->replyText($event->getReplyToken(), 'こんにちは!');
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::debug($e);
+            }
         } else {
             abort(400);
         }
 
-        $bot = LineService::lineSdk();
-
-        try {
-            $events = $bot->perseEventRequest($httpRequestBody, $signature);
-            foreach ($events as $event) {
-                // イベントごとの処理を書いていく
-                if ($eveent instanceof LINE\LINEBot\Event\MessageEvent\TextMessage) {
-                    $bot->replyText($event->getReplyToken(), 'こんにちは!');
-                }
-            }
-        } catch (\Exception $e) {
-            Log::debug($e);
-        }
     }
 }
