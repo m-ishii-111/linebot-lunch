@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Controllers\LineController;
+use App\Http\Controllers\LineController;
 
 /*
 |--------------------------------------------------------------------------
