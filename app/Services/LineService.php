@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Serviecs;
+namespace App\Services;
 
 class LineService
 {
