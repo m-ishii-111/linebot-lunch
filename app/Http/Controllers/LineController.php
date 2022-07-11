@@ -24,7 +24,8 @@ class LineController extends Controller
         // $replyToken = $request->events[0]['replyToken'];
         // $this->lineService->SendReplyMessage($replyToken, 'サンプルメッセージ');
 
-        // error_log(HTTPHeader::LINE_SIGNATURE . ' : ' . print_r($request->header(), true));
+        error_log($request->header('x-line-signature'));
+        error_log(print_r($request->getContent(), true));
 
         // $signature = $request->header(HTTPHeader::LINE_SIGNATURE);
         $signature = $request->header('x-line-signature');
