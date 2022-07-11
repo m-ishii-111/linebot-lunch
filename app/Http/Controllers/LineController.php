@@ -13,7 +13,7 @@ class LineController extends Controller
         $signature = request()->header('X-Line-Signature');
         $validateSignature = SignatureValidator::validateSignature($httpRequestBody, $channelSecret, $signature);
         if ($validateSignature) {
-            return response()->json();
+            return response()->json(200);
         } else {
             abort(400);
         }
