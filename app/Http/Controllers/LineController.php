@@ -29,7 +29,7 @@ class LineController extends Controller
             return abort(400, 'Bad Request');
         }
 
-        $events = $this->lineService->bot->parseEventRequest($request->getContent(), $signature);
+        $events = $this->lineService->bot->parseEventRequest($request->getContent(), env('LINE_CHANNEL_SECRET'), $signature);
         foreach($events as $event)
         {
             if ($event instanceof TextMessage) {
