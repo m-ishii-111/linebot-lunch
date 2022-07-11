@@ -33,7 +33,7 @@ class LineController extends Controller
         if (empty($signature)) {
             return abort(400, 'Bad Request');
         }
-        error_log(print_r(SignatureValidator::validateSignature($request->getContent(), env('LINE_CHANNEL_SECRET'), $signature), true));
+        error_log(base64_encode(hash_hmac('sha256', $request->getContent(), env('LINE_CHANNEL_SECRET'), true)));
 
         $events = $this->lineService->bot->parseEventRequest($request->getContent(),  $signature);
         foreach($events as $event)
