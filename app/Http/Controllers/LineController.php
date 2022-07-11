@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\LineService;
 use Illuminate\Http\Request;
-use Line\LINEBot\Constant\HTTPHeader;
+use LINE\LINEBot\Constant\HTTPHeader;
 
 class LineController extends Controller
 {
