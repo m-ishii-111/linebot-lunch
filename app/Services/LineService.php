@@ -24,7 +24,7 @@ class LineService
 
     public function sortingEvent($request)
     {
-        $events = $this->bot->parseEventRequet($request->getContent(), $signature);
+        $events = $this->bot->parseEventRequest($request->getContent(), $signature);
         foreach($events as $event)
         {
             if ($event instanceof TextMessage) {
