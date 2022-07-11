@@ -9,6 +9,7 @@ use LINE\LINEBot\Constant\HTTPHeader;
 use LINE\LINEBot\Event\FollowEvent;
 use LINE\LINEBot\Event\MessageEvent\TextMessage;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
+use LINE\LINEBot\SignatureValidator;
 
 class LineController extends Controller
 {
@@ -34,6 +35,7 @@ class LineController extends Controller
         }
 
         $events = $this->lineService->bot->parseEventRequest($request->getContent(),  $signature);
+        error_log(print_r(SignatureValidator::validateSignature($body, env('LINE_CHANNEL_SECRET'), $signature), true));
         foreach($events as $event)
         {
             if ($event instanceof TextMessage) {
