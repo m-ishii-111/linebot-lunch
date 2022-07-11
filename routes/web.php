@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return response()->json(['status' => 200]);
+});
 
 Route::post('line', 'App\Http\Controllers\LineController@post')->name('line.post');
