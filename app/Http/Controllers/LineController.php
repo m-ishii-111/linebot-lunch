@@ -28,12 +28,11 @@ class LineController extends Controller
 
         // $signature = $request->header(HTTPHeader::LINE_SIGNATURE);
         $signature = $request->header('x-line-signature');
-        error_log(print_r($request->header('x-line-signature'), true));
         if (empty($signature)) {
             return abort(400, 'Bad Request');
         }
 
-        $events = $this->lineService->bot->parseEventRequest($request->getContent(),  $signature[0]);
+        $events = $this->lineService->bot->parseEventRequest($request->getContent(),  $signature);
         foreach($events as $event)
         {
             if ($event instanceof TextMessage) {
