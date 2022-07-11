@@ -12,7 +12,7 @@ class LineService
     private $accessToken;
     private $channelSecret;
     private $httpClient;
-    private $bot;
+    public  $bot;
 
     public function __construct($accessToken, $channelSecret)
     {
@@ -20,22 +20,6 @@ class LineService
         $this->channleSecret = $channelSecret;
         $this->httpClient = new CurlHTTPClient($this->accessToken);
         $this->bot = new LINEBot($this->httpClient, ['channelSecret' => $this->channelSecret]);
-    }
-
-    public function sortingEvent($request)
-    {
-        $events = $this->bot->parseEventRequest($request->getContent(), $signature);
-        foreach($events as $event)
-        {
-            if ($event instanceof TextMessage) {
-                return $this->bot->replyText($event->getReplyToken(), $event->getText());
-            }
-            if ($event instanceof FollowEvent) {
-                return $this->bot->replyText($event->getReplyToken(), '[bot]友達登録されたよ!');
-            }
-        }
-
-        return 'ok!';
     }
 
     public function SendReplyMessage($replyToken, string $text): \LINE\LINEBot\Response
