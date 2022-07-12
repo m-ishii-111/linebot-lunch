@@ -85,8 +85,9 @@ class LineService
         $shop = $restaurants['shop'][mt_rand(1, $count)];
         error_log(print_r($shop, true));
 
-        $postJson = $this->returnFlexJson($shop);
-        $result = json_encode(['replyToken' => $replyToken, 'messages' => [$postJson]]);
+        $postJsonArray = $this->returnFlexJson($shop);
+        $postArray = ['type' => 'flex', 'altText' => 'searchResult', 'contents' => $postJsonArray];
+        $result = json_encode(['replyToken' => $replyToken, 'messages' => [$postArray]]);
         $curl = curl_init();
         //curl_exec() の返り値を文字列で返す
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
