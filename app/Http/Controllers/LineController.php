@@ -27,8 +27,12 @@ class LineController extends Controller
         if (empty($signature)) {
             return abort(400, 'Signature is empty.');
         }
-        if (!SignatureValidator::validateSignature($content, $signature)) {
-            return abort(400, 'Signature validation invalid');
+        if (!SignatureValidator::validateSignature(
+                $request->getContent(),
+                env('LINE_CHANNEL_SECRET'),
+                $signature
+        )) {
+            abort(400);
         }
 
         $bot = $this->lineService->getBot();
