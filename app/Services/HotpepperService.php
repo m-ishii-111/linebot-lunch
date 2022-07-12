@@ -26,7 +26,7 @@ class HotpepperService
 
         $options = [
             'query' => [
-                'key'    => $this->baseUrl,
+                'key'    => $this->apiKey,
                 'lat'    => $latitude,
                 'lng'    => $longitude,
                 'range'  => $range,

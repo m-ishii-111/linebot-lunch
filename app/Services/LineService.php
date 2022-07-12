@@ -77,10 +77,10 @@ class LineService
     {
         error_log(print_r($restaurants, true));
         $replyToken = $event->getReplyToken();
-        $count = $restaurants['results_returned'];
-        if ($count == 0) {
-            $this->SendReplyMessage($replyToken, '見つかんなかった...(ﾃﾍﾍﾟﾛ');
+        if (!isset($restaurants['results_returned']) || $restaurants['results_returned'] == 0) {
+            $this->SendReplyMessage($replyToken, "ごめぴ！\n見つかんなかった...(ﾃﾍﾍﾟﾛ");
         }
+        $count = $restaurants['results_returned'];
         $shop = $restaurants['shop'][mt_rand(1, $count)];
 
         $postJson = $this->returnFlexJson($shop);
