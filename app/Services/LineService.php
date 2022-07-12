@@ -122,7 +122,7 @@ class LineService
             'type' => 'bubble',
             'hero' => [
                 'type' => 'image',
-                'url'  => $shop['photo']['moblie']['l'],
+                'url'  => $shop['photo']['mobile']['l'],
                 'size' => 'full',
                 'aspectRatio' => '20:13',
                 'aspectMode'  => 'cover',
