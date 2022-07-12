@@ -44,17 +44,24 @@ class LineController extends Controller
             switch (true) {
                 //友達登録＆ブロック解除
                 case $event instanceof \LINE\LINEBot\Event\FollowEvent:
-                    $replyMessage = '登録＆解除';
+                    $messageBuilder = $this->lineService->followAction($event);
                     break;
 
                 //メッセージの受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage:
-                    $replyMessage = $this->lineService->MessageAction($event);
+                    $messageBuilder = $this->lineService->MessageAction($event);
                     break;
 
                 //位置情報の受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\LocationMessage:
-                    $replyMessage = $this->lineService->LocationAction($event);
+                    $address = print_r($envent-getAddress(), true);
+                    $this->lineService->SendReplyMessage('位置情報が送られた。\n'.$address);
+                    // $messageBuilder = $this->lineService->LocationAction($event);
+                    break;
+
+                //スタンプの受信
+                case $event instanceof \LINE\LINEBot\Event\StickerMessage:
+                    $messageBuilder = $this->lineService->StampAction($event);
                     break;
 
                 //選択肢とか選んだ時に受信するイベント
@@ -66,8 +73,9 @@ class LineController extends Controller
                 default:
                     $body = $event->getEventBody();
                     logger()->warning('Unknown event. ['. get_class($event) . ']', compact('body'));
+                    $messageBuilder = $this->lineService->UnknownAction($event, $message);
             }
-            $bot->replyText($replyToken, $replyMessage);
+            $bot->replyMessage($replyToken, $messageBuilder);
         }
         return 'ok!';
     }

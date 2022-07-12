@@ -4,6 +4,10 @@ namespace App\Services;
 
 use LINE\LINEBot;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
+use LINE\LINEBot\MessageBuilder\TemplateMessageBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder;
+use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
+use LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder;
 
 class LineService
 {
@@ -31,30 +35,56 @@ class LineService
         return $this->bot->replyMessage($replyToken, $textMessageBuilder);
     }
 
+    public function FollowAction($event)
+    {
+        $message = '友達登録ありがとう！\n近くのお店を提案するよ！\nまずは話しかけてみてね！！';
+        return new TemplateMessageBuilder($message);
+    }
+
     // TextMessage
     public function MessageAction($event)
     {
         $text = $event->getText();
         $message = '';
         switch ($text) {
-            case 'おはよう':
-                $message = 'おはようございます!';
+            case 'おやすみ':
+                $message = 'おやすみなさい\nよい夢を...zzZ';
+                $messageBuilder = new TextMessageBuilder($message);
                 break;
+            case 'おはよう':
+                $message = 'おはようございます！';
             case 'こんにちは':
                 $message = 'こんにちは！';
-                break;
-            case 'おやすみ':
-                $message = 'おやすみなさい...zzZ';
-                break;
             default:
-                $message = $text;
+                $messageBuilder = $this->requireLocation($event, $message);
         }
-        return $message;
+        return $messageBuilder;
+    }
+
+    public function requireLocation($event, $word)
+    {
+        $uri = new UriTemplateActionBuilder('現在地を送る!', 'line://nv/location');
+        $message = new ButtonTemplateBuilder(null, $word.'\n今どこにいるか教えてください！', null, [$url]);
+        $templateMessageBuilder = new TemplateMessageBuilder('位置情報を送ってね', $message);
+        return $templateMessageBuilder;
     }
 
     // LocationMessage
     public function LocationAction($event)
     {
+        $address = $event->getAddress();
         return $event->getAddress() ?? '位置情報がありません。';
+    }
+
+    // StampAction
+    public function StampAction($event)
+    {
+        return new TextMessageBuilder('スタンプ送るなや');
+    }
+
+    // UnknownAction
+    public function UnknownAction($event, $message)
+    {
+        return new TextMessageBuilder($message);
     }
 }
