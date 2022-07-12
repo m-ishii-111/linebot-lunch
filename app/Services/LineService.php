@@ -81,6 +81,7 @@ class LineService
         }
         $count = $restaurants['results_returned'] - 1;
         $shop = $restaurants['shop'][mt_rand(1, $count)];
+        error_log(print_r($shop, true));
 
         $postJson = $this->returnFlexJson($shop);
         $result = json_encode(['replyToken' => $replyToken, 'messages' => [$postJson]]);
