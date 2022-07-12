@@ -64,7 +64,7 @@ class LineService
     public function requireLocation($event, $word)
     {
         $uri = new UriTemplateActionBuilder('現在地を送る!', 'line://nv/location');
-        $message = new ButtonTemplateBuilder(null, $word.'\n今どこにいるか教えてください！', null, [$url]);
+        $message = new ButtonTemplateBuilder(null, $word.'\n今どこにいるか教えてください！', null, [$uri]);
         $templateMessageBuilder = new TemplateMessageBuilder('位置情報を送ってね', $message);
         return $templateMessageBuilder;
     }
