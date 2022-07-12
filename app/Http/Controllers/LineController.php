@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\LineService;
+use App\Services\HotpepperService;
 use LINE\LINEBot\Constant\HTTPHeader;
 use LINE\LINEBot\SignatureValidator;
 use LINE\LINEBot\Event\FollowEvent;
@@ -15,10 +16,12 @@ use LINE\LINEBot\Event\UnfollowEvent;
 class LineController extends Controller
 {
     private $lineService;
+    private $hotpepperService;
 
-    public function __construct(LineService $lineService)
+    public function __construct(LineService $lineService, HotpepperService $hotpepperService)
     {
         $this->lineService = $lineService;
+        $this->hotpepperService = $hotpepperService;
     }
 
     public function webhook(Request $request)
@@ -54,9 +57,8 @@ class LineController extends Controller
 
                 //位置情報の受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\LocationMessage:
-                    $address = print_r($event->getAddress(), true).": \n".print_r($event->getLatitude(), true). "\n" .print_r($event->getLongitude(), true);
-                    $this->lineService->SendReplyMessage($replyToken, "位置情報が送られた。\n".$address);
-                    // $messageBuilder = $this->lineService->LocationAction($event);
+                    $restaurants = $this->hotpepperService->searchGourmet($event);
+                    $this->lineService->LocationAction($event, $restaurants);
                     break;
 
                 //スタンプの受信

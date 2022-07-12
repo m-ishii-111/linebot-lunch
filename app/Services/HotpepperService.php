@@ -15,12 +15,13 @@ class HotpepperService
         $this->baseUrl = $baseUrl;
     }
 
-    public function searchGourmet()
+    public function searchGourmet($event)
     {
         $client = new Client();
 
-        $latitude  = (float) 0;
-        $longitude = (float) 0;
+        $method = 'GET';
+        $latitude  = $event->getLatitude();
+        $longitude = $event->getLongitude();
         $range = 2;
 
         $option = [

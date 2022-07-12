@@ -15,6 +15,7 @@ class LineService
     private $channelSecret;
     private $httpClient;
     private $bot;
+    private $hotpepperService;
 
     public function __construct($accessToken, $channelSecret)
     {
@@ -35,6 +36,7 @@ class LineService
         return $this->bot->replyMessage($replyToken, $textMessageBuilder);
     }
 
+    // 友達追加とブロック解除
     public function FollowAction($event)
     {
         $message = "友達登録ありがとう！\n近くのお店を提案するよ！\nまずは話しかけてみてね！！";
@@ -61,6 +63,7 @@ class LineService
         return $messageBuilder;
     }
 
+    // 現在地送るボタン
     public function requireLocation($event, $word)
     {
         $uri = new UriTemplateActionBuilder('現在地を送る!', 'line://nv/location');
@@ -70,10 +73,35 @@ class LineService
     }
 
     // LocationMessage
-    public function LocationAction($event)
+    public function LocationAction($event, $restaurants)
     {
-        $address = $event->getAddress();
-        return $event->getAddress() ?? '位置情報がありません。';
+        error_log(print_r($restaurants, true));
+        $replyToken = $event->getReplyToken();
+        $count = $restaurants['results_returned'];
+        if ($count == 0) {
+            $this->SendReplyMessage($replyToken, '見つかんなかった...(ﾃﾍﾍﾟﾛ');
+        }
+        $shop = $restaurants['shop'][mt_rand(1, $count)];
+
+        $postJson = $this->returnFlexJson($shop);
+        $result = json_encode(['replyToken' => $replyToken, 'messages' => [$postJson]]);
+        $curl = curl_init();
+        //curl_exec() の返り値を文字列で返す
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        //POSTリクエスト
+        curl_setopt($curl, CURLOPT_POST, true);
+        //ヘッダを指定
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->accessToken, 'Content-type: application/json'));
+        //リクエストURL
+        curl_setopt($curl, CURLOPT_URL, 'https://api.line.me/v2/bot/message/reply');
+        //送信するデータ
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $result);
+
+        $curlResult = curl_exec($curl);
+
+        curl_close($curl);
+
+        return $curlResult;
     }
 
     // StampAction
@@ -86,5 +114,83 @@ class LineService
     public function UnknownAction($event, $message)
     {
         return new TextMessageBuilder($message);
+    }
+
+    // flexMessage Template
+    public function returnFlexJson($shop)
+    {
+        $content = [
+            'type' => 'bubble',
+            'hero' => [
+                'type' => 'image',
+                'url'  => $shop['photo']['moblie']['l'],
+                'size' => 'full',
+                'aspectRatio' => '20:13',
+                'aspectMode'  => 'cover',
+                'action' => [
+                    'type' => 'uri',
+                    'uri'  => 'http://linecorp.com.cover'
+                ],
+            ],
+            'body' => [
+                'type' => 'box',
+                'layout' => 'vertical',
+                'contents' => [
+                    [
+                        'type' => 'text',
+                        'text' => $shop['name'],
+                        'weight' => 'bold',
+                        'size' => 'xl'
+                    ],
+                    [
+                        'type' => 'box',
+                        'layout' => 'vertical',
+                        'contents' => [
+                            'type' => 'text',
+                            'text' => 'catch'
+                        ],
+                    ],
+                    [
+                        'type' => 'box',
+                        'layout' => 'vertical',
+                        'margin' => 'lg',
+                        'spacing' => 'sm',
+                        'contents' => [
+                            [
+                                'type' => 'box',
+                                'layout' => 'baseline',
+                                'spacing' => 'sm',
+                                'contents' => [
+                                    [
+                                        'type' => 'text',
+                                        'text' => 'Place',
+                                        'color' => '#aaaaaa',
+                                        'size' => 'sm',
+                                        'flex' => 1
+                                    ],
+                                    [
+                                        'type' => 'text',
+                                        'text' => $shop['address'],
+                                        'wrap' => true,
+                                        'color' => '#666666',
+                                        'size' => 'sm',
+                                        'flex' => 5
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'type' => 'box',
+                            'text' => $shop['budget']['average'],
+                            'wrap' => true,
+                            'color' => '#666666',
+                            'size' => 'sm',
+                            'flex' => 5
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        return $content;
     }
 }
