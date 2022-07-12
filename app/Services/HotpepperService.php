@@ -24,7 +24,7 @@ class HotpepperService
         $longitude = $event->getLongitude();
         $range = 2;
 
-        $option = [
+        $options = [
             'query' => [
                 'key'    => $this->baseUrl,
                 'lat'    => $latitude,
