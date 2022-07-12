@@ -27,7 +27,7 @@ class LineController extends Controller
         if (empty($signature)) {
             return abort(400, 'Signature is empty.');
         }
-        if (!SignatureValidator::validateSignature($content, env('LINE_CHANNEL_SECRET'), $signature)) {
+        if (!SignatureValidator::validateSignature($content, $signature)) {
             return abort(400, 'Signature validation invalid');
         }
 
