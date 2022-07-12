@@ -37,7 +37,7 @@ class LineService
 
     public function FollowAction($event)
     {
-        $message = '友達登録ありがとう！\n近くのお店を提案するよ！\nまずは話しかけてみてね！！';
+        $message = "友達登録ありがとう！\n近くのお店を提案するよ！\nまずは話しかけてみてね！！";
         return new TemplateMessageBuilder($message);
     }
 
@@ -48,7 +48,7 @@ class LineService
         $message = '';
         switch ($text) {
             case 'おやすみ':
-                $message = 'おやすみなさい\nよい夢を...zzZ';
+                $message = "おやすみなさい\nよい夢を...zzZ";
                 $messageBuilder = new TextMessageBuilder($message);
                 break;
             case 'おはよう':
@@ -64,7 +64,7 @@ class LineService
     public function requireLocation($event, $word)
     {
         $uri = new UriTemplateActionBuilder('現在地を送る!', 'line://nv/location');
-        $message = new ButtonTemplateBuilder(null, $word.'\n今どこにいるか教えてください！', null, [$uri]);
+        $message = new ButtonTemplateBuilder(null, $word."\n今どこにいるか教えてください！", null, [$uri]);
         $templateMessageBuilder = new TemplateMessageBuilder('位置情報を送ってね', $message);
         return $templateMessageBuilder;
     }
@@ -79,7 +79,7 @@ class LineService
     // StampAction
     public function StampAction($event)
     {
-        return new TextMessageBuilder('スタンプ送るなや');
+        return new TextMessageBuilder('スタンプ送るなや！！！');
     }
 
     // UnknownAction
