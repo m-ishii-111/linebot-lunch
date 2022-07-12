@@ -49,10 +49,7 @@ class HotpepperService
         }
 
         $response = $client->request($method, $this->baseUrl, $options);
-        if (isset($response['results'])) {
-            return null;
-        }
-        error_log(print_r($response, true)['results']);
+        error_log(print_r($response->getBody(), true));
         $restaurants = json_decode($response->getBody(), true)['results'];
 
         return $restaurants;
