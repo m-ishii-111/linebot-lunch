@@ -75,12 +75,11 @@ class LineService
     // LocationMessage
     public function LocationAction($event, $restaurants)
     {
-        error_log(print_r($restaurants, true));
         $replyToken = $event->getReplyToken();
         if (!isset($restaurants['results_returned']) || $restaurants['results_returned'] == 0) {
             $this->SendReplyMessage($replyToken, "ごめぴ！\n見つかんなかった...(ﾃﾍﾍﾟﾛ");
         }
-        $count = $restaurants['results_returned'];
+        $count = $restaurants['results_returned'] - 1;
         $shop = $restaurants['shop'][mt_rand(1, $count)];
 
         $postJson = $this->returnFlexJson($shop);
