@@ -32,7 +32,7 @@ class HotpepperService
                 'range'  => $range,
                 'datum'  => 'world',
                 'order'  => '4',
-                'format' => json
+                'format' => 'json'
             ],
         ];
 
