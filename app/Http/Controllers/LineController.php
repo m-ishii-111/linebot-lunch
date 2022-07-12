@@ -55,7 +55,7 @@ class LineController extends Controller
                 //位置情報の受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\LocationMessage:
                     $address = print_r($event->getAddress(), true);
-                    $this->lineService->SendReplyMessage("位置情報が送られた。\n".$address);
+                    $this->lineService->SendReplyMessage($replyToken, "位置情報が送られた。\n".$address);
                     // $messageBuilder = $this->lineService->LocationAction($event);
                     break;
 
