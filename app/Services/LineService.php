@@ -12,7 +12,7 @@ class LineService
     private $accessToken;
     private $channelSecret;
     private $httpClient;
-    public  $bot;
+    private $bot;
 
     public function __construct($accessToken, $channelSecret)
     {
@@ -20,6 +20,11 @@ class LineService
         $this->channleSecret = $channelSecret;
         $this->httpClient = new CurlHTTPClient($this->accessToken);
         $this->bot = new LINEBot($this->httpClient, ['channelSecret' => $this->channelSecret]);
+    }
+
+    public function getBot()
+    {
+        return $this->bot;
     }
 
     public function SendReplyMessage($replyToken, string $text): \LINE\LINEBot\Response

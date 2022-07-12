@@ -22,28 +22,20 @@ class LineController extends Controller
 
     public function post(Request $request)
     {
-        // $replyToken = $request->events[0]['replyToken'];
-        // $this->lineService->SendReplyMessage($replyToken, 'サンプルメッセージ');
-
-        error_log($request->header('x-line-signature'));
-        error_log(print_r($request->getContent(), true));
-
-        // $signature = $request->header(HTTPHeader::LINE_SIGNATURE);
+        $context = $request->getContext();
         $signature = $request->header('x-line-signature');
         if (empty($signature)) {
-            return abort(400, 'Bad Request');
+            return abort(400, 'Signature is empty.');
         }
-        error_log(base64_encode(hash_hmac('sha256', $request->getContent(), env('LINE_CHANNEL_SECRET'), true)));
+        if (!SignatureValidator::validateSignature($context, env('LINE_CHANNEL_SECRET'), $signature)) {
+            return abort(400, 'Signature validation invalid');
+        }
 
-        $events = $this->lineService->bot->parseEventRequest($request->getContent(),  $signature);
-        foreach($events as $event)
-        {
-            if ($event instanceof TextMessage) {
-                return $this->lineService->bot->replyText($event->getReplyToken(), $event->getText());
-            }
-            if ($event instanceof FollowEvent) {
-                return $this->lineService->bot->replyText($event->getReplyToken(), '[bot]友達登録されたよ!');
-            }
+        $bot = $this->lineService->getBot();
+        $events = $bot->parseEventRequest($context, $signature);
+        foreach ($events as $event) {
+            $replyToken = $event->getReplyToken();
+            $bot->replyText($replyToken, $event->getText());
         }
 
         return 'ok!';
