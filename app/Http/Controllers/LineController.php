@@ -58,8 +58,8 @@ class LineController extends Controller
                 //位置情報の受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\LocationMessage:
                     $restaurants = $this->hotpepperService->searchGourmet($event);
-                    if (!$resuaurants) {
-                        $this->lineService->SendReplyMessage($replyToken, $resuaurants);
+                    if (!$restaurants) {
+                        $this->lineService->SendReplyMessage($replyToken, $restaurants);
                     }
                     $this->lineService->LocationAction($event, $restaurants);
                     break;
