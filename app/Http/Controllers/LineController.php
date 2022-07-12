@@ -62,6 +62,7 @@ class LineController extends Controller
                         $this->lineService->SendReplyMessage($replyToken, $restaurants);
                     }
                     $this->lineService->LocationAction($event, $restaurants);
+                    return 'ok!';
                     break;
 
                 //スタンプの受信

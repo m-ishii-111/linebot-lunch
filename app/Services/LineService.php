@@ -47,17 +47,19 @@ class LineService
     public function MessageAction($event)
     {
         $text = $event->getText();
-        $message = '';
         switch ($text) {
             case 'おやすみ':
                 $message = "おやすみなさい\nよい夢を...zzZ";
                 $messageBuilder = new TextMessageBuilder($message);
                 break;
             case 'おはよう':
-                $message = 'おはようございます！';
+                $message = "おはようございます！\n";
             case 'こんにちは':
-                $message = 'こんにちは！';
+                $message = "こんにちは！\n";
+            case "こんばんは":
+                $message = "こんばんは！\n";
             default:
+                $message = '';
                 $messageBuilder = $this->requireLocation($event, $message);
         }
         return $messageBuilder;
@@ -67,7 +69,7 @@ class LineService
     public function requireLocation($event, $word)
     {
         $uri = new UriTemplateActionBuilder('現在地を送る!', 'line://nv/location');
-        $message = new ButtonTemplateBuilder(null, $word."\n近場のお店を検索します。\n今どこにいるか教えてください！\n\nPowered by ホットペッパー Webサービス", null, [$uri]);
+        $message = new ButtonTemplateBuilder(null, $word."近場のお店を検索します。\n今どこにいるか教えてください！\n\nPowered by ホットペッパー Webサービス", null, [$uri]);
         $templateMessageBuilder = new TemplateMessageBuilder('位置情報を送ってね', $message);
         return $templateMessageBuilder;
     }
@@ -101,6 +103,7 @@ class LineService
 
         curl_close($curl);
 
+        error_log(print_r($curlResult, true));
         return $curlResult;
     }
 
