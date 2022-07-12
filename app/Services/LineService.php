@@ -30,4 +30,31 @@ class LineService
         $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($text);
         return $this->bot->replyMessage($replyToken, $textMessageBuilder);
     }
+
+    // TextMessage
+    public function MessageAction($event)
+    {
+        $text = $event->getText();
+        $message = '';
+        switch ($text) {
+            case 'おはよう':
+                $message = 'おはようございます!';
+                break;
+            case 'こんにちは':
+                $message = 'こんにちは！';
+                break;
+            case 'おやすみ':
+                $message = 'おやすみなさい...zzZ';
+                break;
+            default:
+                $message = $text;
+        }
+        return $message;
+    }
+
+    // LocationMessage
+    public function LocationAction($event)
+    {
+        return $event->getAddress() ?? '位置情報がありません。';
+    }
 }

@@ -46,14 +46,15 @@ class LineController extends Controller
                 case $event instanceof \LINE\LINEBot\Event\FollowEvent:
                     $replyMessage = '登録＆解除';
                     break;
+
                 //メッセージの受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage:
-                    $replyMessage = $this->messageType($event);
+                    $replyMessage = $this->lineService->MessageAction($event);
                     break;
 
                 //位置情報の受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\LocationMessage:
-                    $replyMessage = '位置情報';
+                    $replyMessage = $this->lineService->LocationAction($event);
                     break;
 
                 //選択肢とか選んだ時に受信するイベント
@@ -69,28 +70,5 @@ class LineController extends Controller
             $bot->replyText($replyToken, $replyMessage);
         }
         return 'ok!';
-
-        // $bot->replyText($replyToken, $replyMessage);
-        // $this->lineService->SendReplyMessage($replyToken, 'サンプルテキスト');
-    }
-
-    private function messageType($event): string
-    {
-        $text = $event->getText();
-        $message = '';
-        switch ($text) {
-            case 'おはよう':
-                $message = 'おはようございます!';
-                break;
-            case 'こんにちは':
-                $message = 'こんにちは！';
-                break;
-            case 'おやすみ':
-                $message = 'おやすみなさい...zzZ';
-                break;
-            default:
-                $message = $text;
-        }
-        return $message;
     }
 }
