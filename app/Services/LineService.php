@@ -86,8 +86,8 @@ class LineService
         error_log(print_r($shop, true));
 
         $postJsonArray = $this->returnFlexJson($shop);
-        $postArray = ['type' => 'flex', 'altText' => 'searchResult', 'contents' => $postJsonArray];
-        $result = json_encode(['replyToken' => $replyToken, 'messages' => [$postArray]]);
+        $postArray = ['type' => 'flex', 'altText' => 'flex message', 'contents' => $postJsonArray];
+        $result = json_encode(['replyToken' => $replyToken, 'messages' => $postArray]);
         $curl = curl_init();
         //curl_exec() の返り値を文字列で返す
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
