@@ -22,17 +22,17 @@ class LineController extends Controller
 
     public function post(Request $request)
     {
-        $context = $request->getContext();
+        $content = $request->getContent();
         $signature = $request->header('x-line-signature');
         if (empty($signature)) {
             return abort(400, 'Signature is empty.');
         }
-        if (!SignatureValidator::validateSignature($context, env('LINE_CHANNEL_SECRET'), $signature)) {
+        if (!SignatureValidator::validateSignature($content, env('LINE_CHANNEL_SECRET'), $signature)) {
             return abort(400, 'Signature validation invalid');
         }
 
         $bot = $this->lineService->getBot();
-        $events = $bot->parseEventRequest($context, $signature);
+        $events = $bot->parseEventRequest($content, $signature);
         foreach ($events as $event) {
             $replyToken = $event->getReplyToken();
             $bot->replyText($replyToken, $event->getText());
