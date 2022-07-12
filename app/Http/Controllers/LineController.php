@@ -41,24 +41,24 @@ class LineController extends Controller
 
             switch (true) {
                 //友達登録＆ブロック解除
-                case $event instanceof LINEBot\Event\FollowEvent:
+                case $event instanceof LINE\LINEBot\Event\FollowEvent:
                     $replyMessage = '登録＆解除';
                     break;
                 //メッセージの受信
-                case $event instanceof LINEBot\Event\MessageEvent\TextMessage:
+                case $event instanceof LINE\LINEBot\Event\MessageEvent\TextMessage:
                     $replyMessage = $this->messageType($event);
                     break;
 
                 //位置情報の受信
-                case $event instanceof LINEBot\Event\MessageEvent\LocationMessage:
+                case $event instanceof LINE\LINEBot\Event\MessageEvent\LocationMessage:
                     $replyMessage = '位置情報';
                     break;
 
                 //選択肢とか選んだ時に受信するイベント
-                case $event instanceof LINEBot\Event\PostbackEvent:
+                case $event instanceof LINE\LINEBot\Event\PostbackEvent:
                     break;
                 //ブロック
-                case $event instanceof LINEBot\Event\UnfollowEvent:
+                case $event instanceof LINE\LINEBot\Event\UnfollowEvent:
                     break;
                 default:
                     $body = $event->getEventBody();
