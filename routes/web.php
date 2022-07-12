@@ -14,4 +14,8 @@ use App\Http\Controllers\LineController;
 |
 */
 
-Route::post('line', [LineController::class, 'post'])->name('line.post');
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::post('line/webhook', [LineController::class, 'webhook'])->name('line.webhook');

@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use LINE\LINEBot;
-use LINE\LINBot\Event\FollowEvent;
-use LINE\LINEBot\Event\MessageEvent\TextMessage;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 
 class LineService
@@ -17,7 +15,7 @@ class LineService
     public function __construct($accessToken, $channelSecret)
     {
         $this->accessToken = $accessToken;
-        $this->channleSecret = $channelSecret;
+        $this->channelSecret = $channelSecret;
         $this->httpClient = new CurlHTTPClient($this->accessToken);
         $this->bot = new LINEBot($this->httpClient, ['channelSecret' => $this->channelSecret]);
     }

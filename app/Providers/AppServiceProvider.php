@@ -17,8 +17,8 @@ class AppServiceProvider extends ServiceProvider
         // LINE BOT
         $this->app->bind(LineService::class, function () {
             return new LineService(
-                env('LINE_ACCESS_TOKEN'),
-                env('LINE_CHANNEL_SECRET')
+                config('line.access_token'),
+                config('line.channel_secret')
             );
         });
     }
