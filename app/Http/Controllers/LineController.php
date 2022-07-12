@@ -34,41 +34,61 @@ class LineController extends Controller
 
         $bot = $this->lineService->getBot();
         $events = $bot->parseEventRequest($request->getContent(), $signature);
-        foreach ($events as $event) {
+        foreach ($events as $event)
+        {
             $replyToken = $event->getReplyToken();
-            // $replyMessage = 'その操作はサポートしてません。.[' . get_class($event) . '][' . $event->getType() . ']';
+            $replyMessage = 'その操作はサポートしてません。.[' . get_class($event) . '][' . $event->getType() . ']';
 
-            $bot->replyText($replyToken, $event->getText());
+            switch (true) {
+                //友達登録＆ブロック解除
+                case $event instanceof \LINEBot\Event\FollowEvent:
+                    $replyMessage = '登録＆解除';
+                    break;
+                //メッセージの受信
+                case $event instanceof \LINEBot\Event\MessageEvent\TextMessage:
+                    $replyMessage = $this->messageType($event);
+                    break;
 
-            // switch (true) {
-            //     //友達登録＆ブロック解除
-            //     case $event instanceof LINEBot\Event\FollowEvent:
-            //         $replyMessage = '登録＆解除';
-            //         break;
-            //     //メッセージの受信
-            //     case $event instanceof LINEBot\Event\MessageEvent\TextMessage:
-            //         $replyMessage = $event->getText();
-            //         break;
+                //位置情報の受信
+                case $event instanceof \LINEBot\Event\MessageEvent\LocationMessage:
+                    $replyMessage = '位置情報';
+                    break;
 
-            //     //位置情報の受信
-            //     case $event instanceof LINEBot\Event\MessageEvent\LocationMessage:
-            //         $replyMessage = '位置情報';
-            //         break;
-
-            //     //選択肢とか選んだ時に受信するイベント
-            //     case $event instanceof LINEBot\Event\PostbackEvent:
-            //         break;
-            //     //ブロック
-            //     case $event instanceof LINEBot\Event\UnfollowEvent:
-            //         break;
-            //     default:
-            //         $body = $event->getEventBody();
-            //         logger()->warning('Unknown event. ['. get_class($event) . ']', compact('body'));
-            // }
+                //選択肢とか選んだ時に受信するイベント
+                case $event instanceof \LINEBot\Event\PostbackEvent:
+                    break;
+                //ブロック
+                case $event instanceof \LINEBot\Event\UnfollowEvent:
+                    break;
+                default:
+                    $body = $event->getEventBody();
+                    logger()->warning('Unknown event. ['. get_class($event) . ']', compact('body'));
+            }
+            $bot->replyText($replyToken, $replyMessage);
         }
         return 'ok!';
 
         // $bot->replyText($replyToken, $replyMessage);
         // $this->lineService->SendReplyMessage($replyToken, 'サンプルテキスト');
+    }
+
+    private function messageType($event): string
+    {
+        $text = $event->getText();
+        $message = '';
+        switch ($text) {
+            case 'おはよう':
+                $message = 'おはようございます!';
+                break;
+            case 'こんにちは':
+                $message = 'こんにちは！';
+                break;
+            case 'おやすみ':
+                $message = 'おやすみなさい...zzZ';
+                break;
+            default:
+                $message = $text;
+        }
+        return $message;
     }
 }
