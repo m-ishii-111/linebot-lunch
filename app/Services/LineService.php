@@ -59,7 +59,7 @@ class LineService
             case "こんばんは":
                 $message = "こんばんは！\n";
             default:
-                $message = '';
+                $message = "こんにちは！\n";
                 $messageBuilder = $this->requireLocation($event, $message);
         }
         return $messageBuilder;
@@ -83,11 +83,11 @@ class LineService
         }
         $count = $restaurants['results_returned'] - 1;
         $shop = $restaurants['shop'][mt_rand(1, $count)];
-        error_log(print_r($shop, true));
 
         $postJsonArray = $this->returnFlexJson($shop);
         $postArray = ['type' => 'flex', 'altText' => 'flex message', 'contents' => [$postJsonArray]];
         $result = json_encode(['to' => $event->getUserId(), 'messages' => [$postArray]]);
+        $this->SendReplyMessage($this->getUserId);
         error_log(print_r($result, true));
 
         $curl = curl_init();
