@@ -86,10 +86,10 @@ class LineService
 
         $postJsonArray = $this->returnFlexJson($shop);
         $postArray = ['type' => 'flex', 'altText' => 'flex message', 'contents' => [$postJsonArray]];
-        $result = json_encode(['to' => [$event->getUserId()], 'messages' => [$postArray]]);
+        $result = json_encode(['replyToken' => $replyToken, 'to' => [$event->getUserId()], 'messages' => [$postArray]]);
         // $this->SendReplyMessage($replyToken, $result);
 
-        $result = json_encode(['replyToken' => $replyToken, 'to' => [$event->getUserId()], 'messages' => [['type' => 'text', 'text' => 'てすとれすぽんす！']]]);
+        $result = json_encode(['replyToken' => $replyToken, 'to' => [$event->getUserId()], 'messages' => [['type' => 'flex', 'altText' => 'flex message', 'contents' => [$this->returnFlexJsonDebug()] ]]]);
 
         $curl = curl_init();
         //curl_exec() の返り値を文字列で返す
@@ -97,7 +97,7 @@ class LineService
         //POSTリクエスト
         curl_setopt($curl, CURLOPT_POST, true);
         //ヘッダを指定
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->accessToken, 'Content-type: application/json'));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->accessToken, 'Content-type: application/json; charset=UTF-8'));
         //リクエストURL
         curl_setopt($curl, CURLOPT_URL, 'https://api.line.me/v2/bot/message/reply');
         //送信するデータ
@@ -120,6 +120,27 @@ class LineService
     public function UnknownAction($event, $message)
     {
         return new TextMessageBuilder($message);
+    }
+
+    public function returnFlexJsonDebug()
+    {
+        return [
+            'type' => 'bubble',
+            'body' => [
+                'type' => 'box',
+                'layout' => 'horizontal',
+                'contents' => [
+                    [
+                        'type' => 'text',
+                        'text' => 'Hello,',
+                    ],
+                    [
+                        'type' => 'text',
+                        'text' => 'World!',
+                    ]
+                ]
+            ]
+        ];
     }
 
     // flexMessage Template
