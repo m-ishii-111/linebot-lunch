@@ -87,8 +87,7 @@ class LineService
         $postJsonArray = $this->returnFlexJson($shop);
         $postArray = ['type' => 'flex', 'altText' => 'flex message', 'contents' => [$postJsonArray]];
         $result = json_encode(['to' => $event->getUserId(), 'messages' => [$postArray]]);
-        $this->SendReplyMessage($replyToken, $event->getUserId());
-        error_log(print_r($result, true));
+        $this->SendReplyMessage($replyToken, $result);
 
         $curl = curl_init();
         //curl_exec() の返り値を文字列で返す
