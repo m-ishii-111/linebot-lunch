@@ -87,10 +87,6 @@ class LineService
         $postJsonArray = $this->returnFlexJson($shop);
         $postArray = ['type' => 'flex', 'altText' => 'flex message', 'contents' => $postJsonArray];
         $result = json_encode(['replyToken' => $replyToken, 'to' => [$event->getUserId()], 'messages' => [$postArray]]);
-        // $this->SendReplyMessage($replyToken, $result);
-
-        // $result = json_encode(['replyToken' => $replyToken, 'to' => [$event->getUserId()], 'messages' => [['type' => 'flex', 'altText' => 'flex message', 'contents' => $this->returnFlexJsonDebug() ]]]);
-        // error_log(print_r($result, true));
 
         $curl = curl_init();
         //curl_exec() の返り値を文字列で返す
@@ -121,27 +117,6 @@ class LineService
     public function UnknownAction($event, $message)
     {
         return new TextMessageBuilder($message);
-    }
-
-    public function returnFlexJsonDebug()
-    {
-        return [
-            'type' => 'bubble',
-            'body' => [
-                'type' => 'box',
-                'layout' => 'horizontal',
-                'contents' => [
-                    [
-                        'type' => 'text',
-                        'text' => 'Hello,',
-                    ],
-                    [
-                        'type' => 'text',
-                        'text' => 'World!',
-                    ]
-                ]
-            ]
-        ];
     }
 
     // flexMessage Template
@@ -176,7 +151,8 @@ class LineService
                         'contents' => [
                             [
                                 'type' => 'text',
-                                'text' => $shop['catch']
+                                'text' => $shop['catch'],
+                                'wrap' => true
                             ]
                         ],
                     ],
@@ -193,7 +169,7 @@ class LineService
                                 'contents' => [
                                     [
                                         'type' => 'text',
-                                        'text' => 'Place',
+                                        'text' => '住所',
                                         'color' => '#aaaaaa',
                                         'size' => 'sm',
                                         'flex' => 1
@@ -215,7 +191,7 @@ class LineService
                                 'contents' => [
                                     [
                                         'type' => 'text',
-                                        'text' => 'avg',
+                                        'text' => "平均\n金額",
                                         'color' => '#aaaaaa',
                                         'size' => 'sm',
                                         'flex' => 1,
@@ -233,6 +209,30 @@ class LineService
                     ],
                 ],
             ],
+            [
+                'footer' => [
+                    'type' => 'box',
+                    'layout' => 'horizontail',
+                    'contents' => [
+                        [
+                            'type' => 'button',
+                            'action' => [
+                                'type' => 'uri',
+                                'label' => 'クーポン',
+                                'uri' => $shop['coupon_urls']['sp']
+                            ]
+                        ],
+                        [
+                            'type' => 'button',
+                            'action' => [
+                                'type' => 'uri',
+                                'label' => 'お店のページ',
+                                'uri' => $shop['usls']['pc']
+                            ]
+                        ]
+                    ]
+                ]
+            ]
         ];
         return $content;
     }
