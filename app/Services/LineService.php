@@ -89,7 +89,7 @@ class LineService
         $result = json_encode(['to' => [$event->getUserId()], 'messages' => [$postArray]]);
         // $this->SendReplyMessage($replyToken, $result);
 
-        $resutl = json_encode(['to' => [$event->getUserId()], 'messages' => [['type' => 'text', 'text' => 'てすとれすぽんす！']]]);
+        $result = json_encode(['replyToken' => $replyToken, 'to' => [$event->getUserId()], 'messages' => [['type' => 'text', 'text' => 'てすとれすぽんす！']]]);
 
         $curl = curl_init();
         //curl_exec() の返り値を文字列で返す
