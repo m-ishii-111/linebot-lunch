@@ -69,7 +69,7 @@ class LineService
     public function requireLocation($event, $word)
     {
         $uri = new UriTemplateActionBuilder('現在地を送る!', 'line://nv/location');
-        $message = new ButtonTemplateBuilder(null, $word."近場のお店を検索します。\n今どこにいるか教えてください！\n\nPowered by ホットペッパー Webサービス", null, [$uri]);
+        $message = new ButtonTemplateBuilder(null, $word."近場のお店を検索します。\n今どこにいるか教えてください！", null, [$uri]);
         $templateMessageBuilder = new TemplateMessageBuilder('位置情報を送ってね', $message);
         return $templateMessageBuilder;
     }
@@ -205,6 +205,42 @@ class LineService
                                     ],
                                 ],
                             ],
+                            [
+                                'type' => 'box',
+                                'layout' => 'baseline',
+                                'spacing' => 'sm',
+                                'contents' => [
+                                    [
+                                        'type' => 'text',
+                                        'text' => "営業\n時間",
+                                        'color' => '#aaaaaa',
+                                        'size' => 'sm',
+                                        'flex' => 1,
+                                    ],
+                                    [
+                                        'type' => 'text',
+                                        'text' => $shop['open'],
+                                        'color' => '#666666',
+                                        'size' => 'sm',
+                                        'flex' => 5,
+                                    ],
+                                ],
+                            ],
+
+                            [
+                                'type' => 'box',
+                                'layout' => 'baseline',
+                                'spacing' => 'sm',
+                                'paddingTop' => 'md',
+                                'contents' => [
+                                    [
+                                        'type' => 'text',
+                                        'text' => "Powered by ホットペッパー Webサービス",
+                                        'color' => '#aaaaaa',
+                                        'size' => 'xxs',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -227,7 +263,7 @@ class LineService
                             'action' => [
                                 'type' => 'uri',
                                 'label' => 'お店のページ',
-                                'uri' => $shop['usls']['pc']
+                                'uri' => $shop['urls']['pc']
                             ]
                         ]
                     ]
