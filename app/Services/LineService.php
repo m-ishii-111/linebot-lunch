@@ -89,7 +89,7 @@ class LineService
         $result = json_encode(['replyToken' => $replyToken, 'to' => [$event->getUserId()], 'messages' => [$postArray]]);
         // $this->SendReplyMessage($replyToken, $result);
 
-        $result = json_encode(['replyToken' => $replyToken, 'to' => [$event->getUserId()], 'messages' => [['type' => 'flex', 'altText' => 'flex message', 'contents' => [$this->returnFlexJsonDebug()] ]]]);
+        $result = json_encode(['replyToken' => $replyToken, 'to' => [$event->getUserId()], 'messages' => [['type' => 'flex', 'altText' => 'flex message', 'contents' => $this->returnFlexJsonDebug() ]]]);
         error_log(print_r($result, true));
 
         $curl = curl_init();
