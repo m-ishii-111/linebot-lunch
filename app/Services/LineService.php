@@ -87,7 +87,7 @@ class LineService
         $postJsonArray = $this->returnFlexJson($shop);
         $postArray = ['type' => 'flex', 'altText' => 'flex message', 'contents' => [$postJsonArray]];
         $result = json_encode(['to' => $event->getUserId(), 'messages' => [$postArray]]);
-        $this->SendReplyMessage($replyToken, $result);
+        // $this->SendReplyMessage($replyToken, $result);
 
         $curl = curl_init();
         //curl_exec() の返り値を文字列で返す
@@ -184,14 +184,27 @@ class LineService
                                     ],
                                 ],
                             ],
-                        ],
-                        [
-                            'type' => 'box',
-                            'text' => $shop['budget']['average'],
-                            'wrap' => true,
-                            'color' => '#666666',
-                            'size' => 'sm',
-                            'flex' => 5
+                            [
+                                'type' => 'box',
+                                'layout' => 'baseline',
+                                'spacing' => 'sm',
+                                'contents' => [
+                                    [
+                                        'type' => 'text',
+                                        'text' => 'avg',
+                                        'color' => '#aaaaaa',
+                                        'size' => 'sm',
+                                        'flex' => 1,
+                                    ],
+                                    [
+                                        'type' => 'text',
+                                        'text' => $shop['budget']['average'],
+                                        'color' => '#666666',
+                                        'size' => 'sm',
+                                        'flex' => 5,
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],
