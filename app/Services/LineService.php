@@ -85,12 +85,12 @@ class LineService
         $shop = $restaurants['shop'][mt_rand(1, $count)];
 
         $postJsonArray = $this->returnFlexJson($shop);
-        $postArray = ['type' => 'flex', 'altText' => 'flex message', 'contents' => [$postJsonArray]];
+        $postArray = ['type' => 'flex', 'altText' => 'flex message', 'contents' => $postJsonArray];
         $result = json_encode(['replyToken' => $replyToken, 'to' => [$event->getUserId()], 'messages' => [$postArray]]);
         // $this->SendReplyMessage($replyToken, $result);
 
-        $result = json_encode(['replyToken' => $replyToken, 'to' => [$event->getUserId()], 'messages' => [['type' => 'flex', 'altText' => 'flex message', 'contents' => $this->returnFlexJsonDebug() ]]]);
-        error_log(print_r($result, true));
+        // $result = json_encode(['replyToken' => $replyToken, 'to' => [$event->getUserId()], 'messages' => [['type' => 'flex', 'altText' => 'flex message', 'contents' => $this->returnFlexJsonDebug() ]]]);
+        // error_log(print_r($result, true));
 
         $curl = curl_init();
         //curl_exec() の返り値を文字列で返す
