@@ -122,7 +122,7 @@ class LineService
     // flexMessage Template
     public function returnFlexJson($shop)
     {
-        $googleMapUri = 'https://www.google.com/maps/search/?api=1&query='.$shop['lat'].','.$shop['lng'].'&zoom=19';
+        $googleMapUri = 'https://www.google.com/maps/search/?api=1&query='.$shop['lat'].','.$shop['lng'].'&zoom=20';
         error_log($googleMapUri);
         $content = [
             'type' => 'bubble',
@@ -134,7 +134,7 @@ class LineService
                 'aspectMode'  => 'cover',
                 'action' => [
                     'type' => 'uri',
-                    'uri'  => $shop['urls']['pc']
+                    'uri'  => $shop['urls']['sp'] ?? $shop['urls']['pc']
                 ],
             ],
             'body' => [
@@ -168,22 +168,23 @@ class LineService
                                 'type' => 'box',
                                 'layout' => 'baseline',
                                 'spacing' => 'sm',
+                                'paddingBottom' => 'sm',
                                 'contents' => [
                                     [
                                         'type' => 'text',
-                                        'text' => '住所',
+                                        'text' => "ジャンル",
                                         'wrap' => true,
                                         'color' => '#aaaaaa',
                                         'size' => 'sm',
-                                        'flex' => 1
+                                        'flex' => 1,
                                     ],
                                     [
                                         'type' => 'text',
-                                        'text' => $shop['address'],
+                                        'text' => $shop['genre']['name'],
                                         'wrap' => true,
                                         'color' => '#666666',
                                         'size' => 'sm',
-                                        'flex' => 5
+                                        'flex' => 5,
                                     ],
                                 ],
                             ],
@@ -191,10 +192,11 @@ class LineService
                                 'type' => 'box',
                                 'layout' => 'baseline',
                                 'spacing' => 'sm',
+                                'paddingBottom' => 'sm',
                                 'contents' => [
                                     [
                                         'type' => 'text',
-                                        'text' => "平均\n金額",
+                                        'text' => "金額",
                                         'wrap' => true,
                                         'color' => '#aaaaaa',
                                         'size' => 'sm',
@@ -214,6 +216,7 @@ class LineService
                                 'type' => 'box',
                                 'layout' => 'baseline',
                                 'spacing' => 'sm',
+                                'paddingBottom' => 'sm',
                                 'contents' => [
                                     [
                                         'type' => 'text',
@@ -230,6 +233,30 @@ class LineService
                                         'color' => '#666666',
                                         'size' => 'sm',
                                         'flex' => 5,
+                                    ],
+                                ],
+                            ],
+                            [
+                                'type' => 'box',
+                                'layout' => 'baseline',
+                                'spacing' => 'sm',
+                                'paddingBottom' => 'sm',
+                                'contents' => [
+                                    [
+                                        'type' => 'text',
+                                        'text' => '住所',
+                                        'wrap' => true,
+                                        'color' => '#aaaaaa',
+                                        'size' => 'sm',
+                                        'flex' => 1
+                                    ],
+                                    [
+                                        'type' => 'text',
+                                        'text' => $shop['address'],
+                                        'wrap' => true,
+                                        'color' => '#666666',
+                                        'size' => 'sm',
+                                        'flex' => 5
                                     ],
                                 ],
                             ],
@@ -268,7 +295,7 @@ class LineService
                         'action' => [
                             'type' => 'uri',
                             'label' => 'Google Map',
-                            'uri' => $googleMapUri,
+                            'uri' => $googleMapUri
                         ]
                     ]
                 ]
