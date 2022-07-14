@@ -170,6 +170,7 @@ class LineService
                                     [
                                         'type' => 'text',
                                         'text' => '住所',
+                                        'wrap' => true,
                                         'color' => '#aaaaaa',
                                         'size' => 'sm',
                                         'flex' => 1
@@ -192,6 +193,7 @@ class LineService
                                     [
                                         'type' => 'text',
                                         'text' => "平均\n金額",
+                                        'wrap' => true,
                                         'color' => '#aaaaaa',
                                         'size' => 'sm',
                                         'flex' => 1,
@@ -199,6 +201,7 @@ class LineService
                                     [
                                         'type' => 'text',
                                         'text' => $shop['budget']['average'],
+                                        'wrap' => true,
                                         'color' => '#666666',
                                         'size' => 'sm',
                                         'flex' => 5,
@@ -213,6 +216,7 @@ class LineService
                                     [
                                         'type' => 'text',
                                         'text' => "営業\n時間",
+                                        'wrap' => true,
                                         'color' => '#aaaaaa',
                                         'size' => 'sm',
                                         'flex' => 1,
@@ -220,6 +224,7 @@ class LineService
                                     [
                                         'type' => 'text',
                                         'text' => $shop['open'],
+                                        'wrap' => true,
                                         'color' => '#666666',
                                         'size' => 'sm',
                                         'flex' => 5,
@@ -260,8 +265,8 @@ class LineService
                         'type' => 'button',
                         'action' => [
                             'type' => 'uri',
-                            'label' => 'お店のページ',
-                            'uri' => $shop['urls']['pc']
+                            'label' => 'Google Map',
+                            'uri' => 'https://www.google.com/maps/search/'.$shop['urls']['pc'].'/@'.$shop['lat'].','.$shop['lng'].',20z/',
                         ]
                     ]
                 ]
