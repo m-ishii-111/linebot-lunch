@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\MessageMst;
+
 use LINE\LINEBot;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 use LINE\LINEBot\MessageBuilder\TemplateMessageBuilder;
@@ -17,12 +19,16 @@ class LineService
     private $bot;
     private $hotpepperService;
 
-    public function __construct($accessToken, $channelSecret)
+    private $messages;
+
+    public function __construct($accessToken, $channelSecret, MessageMst $messageMst)
     {
         $this->accessToken = $accessToken;
         $this->channelSecret = $channelSecret;
         $this->httpClient = new CurlHTTPClient($this->accessToken);
         $this->bot = new LINEBot($this->httpClient, ['channelSecret' => $this->channelSecret]);
+
+        $this->messages = $messageMst->getMessages();
     }
 
     public function getBot()
@@ -68,8 +74,8 @@ class LineService
     // 現在地送るボタン
     public function requireLocation($event, $word)
     {
-        $uri = new UriTemplateActionBuilder('現在地を送る!', 'line://nv/location');
-        $message = new ButtonTemplateBuilder(null, $word."近場のお店を検索します。\n今どこにいるか教えてください！", null, [$uri]);
+        $uri = new UriTemplateActionBuilder($this->messages['location'][1], 'line://nv/location');
+        $message = new ButtonTemplateBuilder(null, $word.$this->messages['location'][0], null, [$uri]);
         $templateMessageBuilder = new TemplateMessageBuilder('位置情報を送ってね', $message);
         return $templateMessageBuilder;
     }
@@ -79,7 +85,7 @@ class LineService
     {
         $replyToken = $event->getReplyToken();
         if (!isset($restaurants['results_returned']) || $restaurants['results_returned'] == 0) {
-            $this->SendReplyMessage($replyToken, "ごめぴ！\n見つかんなかった...(ﾃﾍﾍﾟﾛ");
+            $this->SendReplyMessage($replyToken, $this->messages['location'][9]);
         }
         $count = $restaurants['results_returned'] - 1;
         $shop = $restaurants['shop'][mt_rand(1, $count)];
@@ -110,7 +116,7 @@ class LineService
     // StampAction
     public function StampAction($event)
     {
-        return new TextMessageBuilder('スタンプ送るなや！！！');
+        return new TextMessageBuilder($this->messages['stamp'][1]);
     }
 
     // UnknownAction
