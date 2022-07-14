@@ -13,7 +13,7 @@ class CreateMessageMstTable extends Migration
      */
     public function up()
     {
-        Schema::create('message_mst', function (Blueprint $table) {
+        Schema::create('message_msts', function (Blueprint $table) {
             $table->id();
             $table->string('type')->default('サンプルテキスト');
             $table->integer('seq')->unsigned()->default(0);
@@ -32,6 +32,6 @@ class CreateMessageMstTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('message_mst');
+        Schema::dropIfExists('message_msts');
     }
 }

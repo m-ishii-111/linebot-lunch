@@ -21,14 +21,15 @@ class LineService
 
     private $messages;
 
-    public function __construct($accessToken, $channelSecret, MessageMst $messageMst)
+    public function __construct($accessToken, $channelSecret)
     {
         $this->accessToken = $accessToken;
         $this->channelSecret = $channelSecret;
         $this->httpClient = new CurlHTTPClient($this->accessToken);
         $this->bot = new LINEBot($this->httpClient, ['channelSecret' => $this->channelSecret]);
 
-        $this->messages = $messageMst->getMessages();
+        $messagesMst = new MessageMst();
+        $this->messages = $messagesMst->getMessages();
     }
 
     public function getBot()
@@ -45,7 +46,7 @@ class LineService
     // 友達追加とブロック解除
     public function FollowAction($event)
     {
-        $message = "友達登録ありがとう！\n近くのお店を提案するよ！\nまずは話しかけてみてね！！";
+        $message = $messages['follow'][0];
         return new TemplateMessageBuilder($message);
     }
 

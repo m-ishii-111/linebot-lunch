@@ -23,7 +23,7 @@ class MessageMstSeeder extends Seeder
             4 => 'message',
         ];
 
-        DB::table('message_mst')->insert([
+        DB::table('message_msts')->insert([
             [
                 'type' => $type[1],
                 'seq'  => 0,

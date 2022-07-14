@@ -20,8 +20,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(LineService::class, function () {
             return new LineService(
                 config('line.access_token'),
-                config('line.channel_secret'),
-                MessageMst::class
+                config('line.channel_secret')
             );
         });
 
