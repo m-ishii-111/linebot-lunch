@@ -248,7 +248,7 @@ class LineService
             [
                 'footer' => [
                     'type' => 'box',
-                    'layout' => 'horizontail',
+                    'layout' => 'horizontal',
                     'contents' => [
                         [
                             'type' => 'button',
