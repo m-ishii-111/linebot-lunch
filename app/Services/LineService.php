@@ -132,7 +132,7 @@ class LineService
                 'aspectMode'  => 'cover',
                 'action' => [
                     'type' => 'uri',
-                    'uri'  => 'http://linecorp.com.cover'
+                    'uri'  => $shop['urls']['pc']
                 ],
             ],
             'body' => [
