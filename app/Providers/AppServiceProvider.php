@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Services\LineService;
 use App\Services\HotpepperService;
 use Illuminate\Support\ServiceProvider;
+use App\Models\MessageMst;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,7 +20,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(LineService::class, function () {
             return new LineService(
                 config('line.access_token'),
-                config('line.channel_secret')
+                config('line.channel_secret'),
+                MessageMst::class
             );
         });
 
