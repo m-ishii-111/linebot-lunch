@@ -122,7 +122,7 @@ class LineService
     // flexMessage Template
     public function returnFlexJson($shop)
     {
-        $googleMapUri = 'https://www.google.com/maps/search/?api=1&query='.$shop['address'].'/@'.$shop['lat'].','.$shop['lng'].',20z/';
+        $googleMapUri = 'https://www.google.com/maps/search/?api=1&query='.str_replace(' ', '+', $shop['address']).'&center='.$shop['lat'].','.$shop['lng'].'&zoom=19';
         error_log($googleMapUri);
         $content = [
             'type' => 'bubble',
