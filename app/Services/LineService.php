@@ -123,6 +123,7 @@ class LineService
     public function returnFlexJson($shop)
     {
         $googleMapUri = 'https://www.google.com/maps/search/?api=1&query='.$shop['address'].'/@'.$shop['lat'].','.$shop['lng'].',20z/';
+        error_log($googleMapUri);
         $content = [
             'type' => 'bubble',
             'hero' => [
