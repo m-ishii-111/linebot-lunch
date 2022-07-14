@@ -226,7 +226,6 @@ class LineService
                                     ],
                                 ],
                             ],
-
                             [
                                 'type' => 'box',
                                 'layout' => 'baseline',
@@ -245,26 +244,24 @@ class LineService
                     ],
                 ],
             ],
-            [
-                'footer' => [
-                    'type' => 'box',
-                    'layout' => 'horizontal',
-                    'contents' => [
-                        [
-                            'type' => 'button',
-                            'action' => [
-                                'type' => 'uri',
-                                'label' => 'クーポン',
-                                'uri' => $shop['coupon_urls']['sp']
-                            ]
-                        ],
-                        [
-                            'type' => 'button',
-                            'action' => [
-                                'type' => 'uri',
-                                'label' => 'お店のページ',
-                                'uri' => $shop['urls']['pc']
-                            ]
+            'footer' => [
+                'type' => 'box',
+                'layout' => 'horizontal',
+                'contents' => [
+                    [
+                        'type' => 'button',
+                        'action' => [
+                            'type' => 'uri',
+                            'label' => 'クーポン',
+                            'uri' => $shop['coupon_urls']['sp']
+                        ]
+                    ],
+                    [
+                        'type' => 'button',
+                        'action' => [
+                            'type' => 'uri',
+                            'label' => 'お店のページ',
+                            'uri' => $shop['urls']['pc']
                         ]
                     ]
                 ]
