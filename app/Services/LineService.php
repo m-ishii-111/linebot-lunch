@@ -54,22 +54,53 @@ class LineService
     public function MessageAction($event)
     {
         $text = $event->getText();
-        switch ($text) {
-            case 'おやすみ':
-                $message = "おやすみなさい\nよい夢を...zzZ";
-                $messageBuilder = new TextMessageBuilder($message);
-                break;
-            case 'おはよう':
+        $timezone = $this->getTimezone();
+        $message = '';
+        switch ($timezone) {
+            case 'midnight':
+                $message = "こんな夜遅くに店探すの？\n";
+            case 'morning':
                 $message = "おはようございます！\n";
-            case 'こんにちは':
+            case 'noon':
                 $message = "こんにちは！\n";
-            case "こんばんは":
+            case 'night':
                 $message = "こんばんは！\n";
             default:
-                $message = "こんにちは！\n";
                 $messageBuilder = $this->requireLocation($event, $message);
         }
+
         return $messageBuilder;
+        // $message = "こんにちは！\n";
+        // switch ($text) {
+        //     case 'おやすみ':
+        //         $message = "おやすみなさい\nよい夢を...zzZ";
+        //         $messageBuilder = new TextMessageBuilder($message);
+        //         break;
+        //     case 'おはよう':
+        //         $message = "おはようございます！\n";
+        //     case 'こんにちは':
+        //         $message = "こんにちは！\n";
+        //     case "こんばんは":
+        //         $message = "こんばんは！\n";
+        //     default:
+        //         $messageBuilder = $this->requireLocation($event, $message);
+        // }
+        // return $messageBuilder;
+    }
+
+    // 時間帯を取得する
+    public function getTimezone()
+    {
+        $hour = date("i");
+        if (5 < $hour && $hour <= 10 ) {
+            $time = 'morning';
+        } elseif (10 < $hour && $hour <= 15) {
+            $time = 'noon';
+        } elseif (15 < $hour && $hour <= 22) {
+            $time = 'night';
+        } else {
+            $time = 'midnight';
+        }
     }
 
     // 現在地送るボタン
