@@ -133,8 +133,8 @@ class LineService
         $logsCount = count($shopIds);
 
         if ($count != $logsCount || $logsCount != 0) {
-            error_log(print_r($restaurants, true));
-            $shop_filter_id = array_filter($restaurants, function ($shop) use ($shopIds) {
+            $shop_filter_id = array_filter($restaurants['shop'], function ($shop) use ($shopIds) {
+                error_log(print_r($shop));
                 return !in_array($shop['id'], $shopIds);
             });
             $count = count($shop_filter_id) - 1;
