@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\MessageMst;
+use App\Models\ShopLog;
 
 use LINE\LINEBot;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
@@ -20,6 +21,7 @@ class LineService
     private $hotpepperService;
 
     private $messages;
+    private $shopLog;
 
     public function __construct($accessToken, $channelSecret)
     {
@@ -30,6 +32,7 @@ class LineService
 
         $messagesMst = new MessageMst();
         $this->messages = $messagesMst->getMessages();
+        $this->shopLog = new ShopLog();
     }
 
     public function getBot()
@@ -116,15 +119,33 @@ class LineService
     public function LocationAction($event, $restaurants)
     {
         $replyToken = $event->getReplyToken();
+        $lineUserId = $event->getUserId();
         if (!isset($restaurants['results_returned']) || $restaurants['results_returned'] == 0) {
+            error_log('line_user_id: '.$lineUserId.', error: restaurants not found.');
             $this->SendReplyMessage($replyToken, $this->messages['location'][9]);
         }
+
         $count = $restaurants['results_returned'] - 1;
-        $shop = $restaurants['shop'][mt_rand(1, $count)];
+        $logs = $this->shopLog->getWeekLogs($lineUserId);
+        $shopIds = array_column($logs, 'hp_shop_id');
+        // $genreCodes = array_column($logs, 'hp_genre_code');
+        $logsCount = count($shopIds);
+
+        if ($count != $logsCount || $logsCount > 0 || $count > 0) {
+            $shop_filter_id = array_filter($restaurants, function ($shop) use ($shopIds) {
+                return !in_array($shop['id'], $shopIds);
+            });
+            $count = count($shop_filter_id) - 1;
+            $restaurants = $shop_filter_id;
+        }
+
+        $shopId = ($count == 0) ? 0 : mt_rand(0, $count);
+        $shop = $restaurants['shop'][$shopId];
+        $this->shopLog->insertLog($lineUserId, $shop);
 
         $postJsonArray = $this->returnFlexJson($shop);
         $postArray = ['type' => 'flex', 'altText' => 'flex message', 'contents' => $postJsonArray];
-        $result = json_encode(['replyToken' => $replyToken, 'to' => [$event->getUserId()], 'messages' => [$postArray]]);
+        $result = json_encode(['replyToken' => $replyToken, 'to' => [$lineUserId], 'messages' => [$postArray]]);
 
         $curl = curl_init();
         //curl_exec() の返り値を文字列で返す
