@@ -131,7 +131,7 @@ class LineService
         // $genreCodes = array_column($logs, 'hp_genre_code');
         $logsCount = count($shopIds);
 
-        if ($count != $logsCount || $logsCount > 0 || $count > 0) {
+        if ($count != $logsCount || $logsCount == 0 || $count == 0) {
             $shop_filter_id = array_filter($restaurants, function ($shop) use ($shopIds) {
                 return !in_array($shop['id'], $shopIds);
             });
