@@ -160,19 +160,29 @@ class LineService
     // flexMessage Template
     public function returnFlexJson($shop)
     {
-        $googleMapUri = 'https://www.google.com/maps/search/?api=1&query='.$shop['lat'].','.$shop['lng'].'&zoom=20';
-        error_log($googleMapUri);
+        $thumbnail    = $shop['photo']['mobile']['l'] ?? config('line.noimage');
+        $shopUrl      = $shop['urls']['sp'] ?? $shop['urls']['pc'];
+        $name         = $shop['name'] ?? '-';
+        $catch        = $shop['catch'] ?? '-';
+        $genre        = $shop['genre']['name'] ?? '-';
+        $budget       = $shop['budget']['average'] ?? '-';
+        $open         = $shop['open'] ?? '-';
+        $close        = $shop['close'] ?? '-';
+        $address      = $shop['address'] ?? '-';
+        $coupon       = $shop['coupon_urls']['sp'] ?? $shop['coupon_urls']['sp'];
+        $googleMapUri = config('line.google_map_uri').'?api=1&query='.$shop['lat'].','.$shop['lng'].'&zoom=20';
+
         $content = [
             'type' => 'bubble',
             'hero' => [
                 'type' => 'image',
-                'url'  => $shop['photo']['mobile']['l'],
+                'url'  => $thumbnail,
                 'size' => 'full',
                 'aspectRatio' => '20:13',
                 'aspectMode'  => 'cover',
                 'action' => [
                     'type' => 'uri',
-                    'uri'  => $shop['urls']['sp'] ?? $shop['urls']['pc']
+                    'uri'  => $shopUrl,
                 ],
             ],
             'body' => [
@@ -181,7 +191,7 @@ class LineService
                 'contents' => [
                     [
                         'type' => 'text',
-                        'text' => $shop['name'],
+                        'text' => $name,
                         'weight' => 'bold',
                         'size' => 'xl'
                     ],
@@ -191,7 +201,7 @@ class LineService
                         'contents' => [
                             [
                                 'type' => 'text',
-                                'text' => $shop['catch'],
+                                'text' => $catch,
                                 'wrap' => true
                             ]
                         ],
@@ -218,7 +228,7 @@ class LineService
                                     ],
                                     [
                                         'type' => 'text',
-                                        'text' => $shop['genre']['name'],
+                                        'text' => $genre,
                                         'wrap' => true,
                                         'color' => '#666666',
                                         'size' => 'sm',
@@ -242,7 +252,7 @@ class LineService
                                     ],
                                     [
                                         'type' => 'text',
-                                        'text' => $shop['budget']['average'],
+                                        'text' => $budget,
                                         'wrap' => true,
                                         'color' => '#666666',
                                         'size' => 'sm',
@@ -266,7 +276,31 @@ class LineService
                                     ],
                                     [
                                         'type' => 'text',
-                                        'text' => $shop['open'],
+                                        'text' => $open,
+                                        'wrap' => true,
+                                        'color' => '#666666',
+                                        'size' => 'sm',
+                                        'flex' => 5,
+                                    ],
+                                ],
+                            ],
+                            [
+                                'type' => 'box',
+                                'layout' => 'baseline',
+                                'spacing' => 'sm',
+                                'paddingBottom' => 'sm',
+                                'contents' => [
+                                    [
+                                        'type' => 'text',
+                                        'text' => "定休日",
+                                        'wrap' => true,
+                                        'color' => '#aaaaaa',
+                                        'size' => 'sm',
+                                        'flex' => 1,
+                                    ],
+                                    [
+                                        'type' => 'text',
+                                        'text' => $close,
                                         'wrap' => true,
                                         'color' => '#666666',
                                         'size' => 'sm',
@@ -290,7 +324,7 @@ class LineService
                                     ],
                                     [
                                         'type' => 'text',
-                                        'text' => $shop['address'],
+                                        'text' => $address,
                                         'wrap' => true,
                                         'color' => '#666666',
                                         'size' => 'sm',
@@ -325,7 +359,7 @@ class LineService
                         'action' => [
                             'type' => 'uri',
                             'label' => 'クーポン',
-                            'uri' => $shop['coupon_urls']['sp']
+                            'uri' => $coupon,
                         ]
                     ],
                     [
@@ -333,7 +367,7 @@ class LineService
                         'action' => [
                             'type' => 'uri',
                             'label' => 'Google Map',
-                            'uri' => $googleMapUri
+                            'uri' => $googleMapUri,
                         ]
                     ]
                 ]
