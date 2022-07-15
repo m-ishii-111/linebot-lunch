@@ -69,8 +69,9 @@ class LineService
             case 'night':
                 $message = "こんばんは！\n";
             default:
-                $messageBuilder = $this->requireLocation($event, $message);
+                $message = "こんにちは！\n";
         }
+        $messageBuilder = $this->requireLocation($event, $message);
 
         return $messageBuilder;
         // $message = "こんにちは！\n";
@@ -131,8 +132,9 @@ class LineService
         // $genreCodes = array_column($logs, 'hp_genre_code');
         $logsCount = count($shopIds);
 
-        if ($count != $logsCount || $logsCount == 0 || $count == 0) {
+        if ($count != $logsCount || $logsCount == 0) {
             $shop_filter_id = array_filter($restaurants, function ($shop) use ($shopIds) {
+                error_log(print_r($shop, true));
                 return !in_array($shop['id'], $shopIds);
             });
             $count = count($shop_filter_id) - 1;
