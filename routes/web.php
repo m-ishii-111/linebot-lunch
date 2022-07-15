@@ -19,3 +19,6 @@ Route::get('/', function () {
 });
 
 Route::post('line/webhook', [LineController::class, 'webhook'])->name('line.webhook');
+Auth::routes(['register' => false]);
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
