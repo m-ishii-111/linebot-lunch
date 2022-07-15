@@ -23,6 +23,8 @@ class LineService
     private $messages;
     private $shopLog;
 
+    private $timezone;
+
     public function __construct($accessToken, $channelSecret)
     {
         $this->accessToken = $accessToken;
@@ -33,6 +35,8 @@ class LineService
         $messagesMst = new MessageMst();
         $this->messages = $messagesMst->getMessages();
         $this->shopLog = new ShopLog();
+
+        $this->timeZone = $this->getTimezone();
     }
 
     public function getBot()
@@ -57,9 +61,8 @@ class LineService
     public function MessageAction($event)
     {
         $text = $event->getText();
-        $timezone = $this->getTimezone();
         $message = '';
-        switch ($timezone) {
+        switch ($this->timeZone) {
             case 'midnight':
                 $message = "こんな夜遅くに店探すの？\n";
             case 'morning':
@@ -192,6 +195,7 @@ class LineService
         $budget       = $shop['budget']['average'] ?? '-';
         $open         = $shop['open'] ?? '-';
         $close        = $shop['close'] ?? '-';
+        $lunch        = $shop['lunch'] ?? '';
         $address      = $shop['address'] ?? '-';
         $coupon       = $shop['coupon_urls']['sp'] ?? $shop['coupon_urls']['sp'];
         $googleMapUri = config('line.google_map_uri').'?api=1&query='.$shop['lat'].','.$shop['lng'].'&zoom=20';
@@ -356,20 +360,6 @@ class LineService
                                     ],
                                 ],
                             ],
-                            [
-                                'type' => 'box',
-                                'layout' => 'baseline',
-                                'spacing' => 'sm',
-                                'paddingTop' => 'md',
-                                'contents' => [
-                                    [
-                                        'type' => 'text',
-                                        'text' => "Powered by ホットペッパー Webサービス",
-                                        'color' => '#aaaaaa',
-                                        'size' => 'xxs',
-                                    ],
-                                ],
-                            ],
                         ],
                     ],
                 ],
@@ -397,6 +387,51 @@ class LineService
                 ]
             ]
         ];
+
+        // お昼時はランチ情報を追加
+        if ($this->timeZone == 'lunch') {
+            $content['body']['contents'][2]['contents'][] = [
+                'type' => 'box',
+                'layout' => 'baseline',
+                'spacing' => 'sm',
+                'paddingBottom' => 'sm',
+                'contents' => [
+                    [
+                        'type' => 'text',
+                        'text' => "ランチ",
+                        'wrap' => true,
+                        'color' => '#aaaaaa',
+                        'size' => 'sm',
+                        'flex' => 1,
+                    ],
+                    [
+                        'type' => 'text',
+                        'text' => $lunch,
+                        'wrap' => true,
+                        'color' => '#666666',
+                        'size' => 'sm',
+                        'flex' => 5,
+                    ],
+                ],
+            ];
+        }
+
+        // 情報提供元の追加
+        $content['body']['contents'][2]['contents'][] = [
+            'type' => 'box',
+            'layout' => 'baseline',
+            'spacing' => 'sm',
+            'paddingTop' => 'md',
+            'contents' => [
+                [
+                    'type' => 'text',
+                    'text' => "Powered by ホットペッパー Webサービス",
+                    'color' => '#aaaaaa',
+                    'size' => 'xxs',
+                ],
+            ],
+        ];
+
         return $content;
     }
 }
