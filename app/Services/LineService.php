@@ -132,6 +132,7 @@ class LineService
         // $genreCodes = array_column($logs, 'hp_genre_code');
         $logsCount = count($shopIds);
 
+        $shops = $restaurants['shop'];
         if ($count != $logsCount || $logsCount != 0) {
             $shop_filter_id = array_filter($restaurants['shop'], function ($shop) use ($shopIds) {
                 error_log(print_r($shop));
@@ -142,7 +143,7 @@ class LineService
         }
 
         $shopId = ($count == 0) ? 0 : mt_rand(0, $count);
-        $shop = $restaurants['shop'][$shopId];
+        $shop = $restaurants[$shopId];
         $this->shopLog->insertLog($lineUserId, $shop);
 
         $postJsonArray = $this->returnFlexJson($shop);
