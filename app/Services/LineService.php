@@ -160,6 +160,7 @@ class LineService
     // flexMessage Template
     public function returnFlexJson($shop)
     {
+        error_log(print_r($shop, true));
         $thumbnail    = $shop['photo']['mobile']['l'] ?? config('line.noimage');
         $shopUrl      = $shop['urls']['sp'] ?? $shop['urls']['pc'];
         $name         = $shop['name'] ?? '-';
