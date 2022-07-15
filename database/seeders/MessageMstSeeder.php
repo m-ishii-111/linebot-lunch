@@ -50,7 +50,7 @@ class MessageMstSeeder extends Seeder
             ],
             [
                 'type' => $type[3],
-                'seq' => 1,
+                'seq' => 0,
                 'message' => "スタンプ送らないでよ...",
                 'user_id' => 1,
             ],

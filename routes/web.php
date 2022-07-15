@@ -13,7 +13,6 @@ use App\Http\Controllers\LineController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -21,4 +20,5 @@ Route::get('/', function () {
 Route::post('line/webhook', [LineController::class, 'webhook'])->name('line.webhook');
 Auth::routes(['register' => false]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\MessageMstController::class, 'index'])->name('home');
+Route::post('/home', [App\Http\Controllers\MessageMstController::class, 'store'])->name('store');
