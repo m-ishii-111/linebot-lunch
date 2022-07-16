@@ -68,11 +68,11 @@ class LineService
             case 'midnight':
                 $message = "こんな夜遅くに店探すの？\n";
             case 'morning':
-                $message = "おはようございます！\n";
+                $message = "おはよう！\n";
             case 'noon':
-                $message = "こんにちは！\n";
+                $message = "こんにちは！\nランチの時間だね！\n";
             case 'night':
-                $message = "こんばんは！\n";
+                $message = "こんばんは！\n今日はどこで食べる？\n";
             default:
                 $message = "こんにちは！\n";
         }
@@ -155,8 +155,6 @@ class LineService
         $curlResult = curl_exec($curl);
 
         curl_close($curl);
-
-        $this->SendReplyMessage($replyToken, 'これなんてどう？');
 
         return $curlResult;
     }
