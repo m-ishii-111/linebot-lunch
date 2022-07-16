@@ -38,13 +38,10 @@ class HotpepperService
         ];
 
         // 時間で勝手にパラメータつけちゃう
-        $hour = date('i');
-        if ($hour >= 11 && $hour < 16) {
+        $hour = date('H');
+        if (10 < $hour && $hour < 16) {
             $options['query']['lunch'] = 1;
         }
-        // if ($hour >= 16 || $hour < 22) {
-        //     $options['query']['midnight'] = 1;
-        // }
         if ($hour >= 21) {
             $options['query']['midnight'] = 1;
             $options['query']['midnight_meal'] = 1;

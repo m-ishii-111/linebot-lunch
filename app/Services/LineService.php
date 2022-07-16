@@ -63,7 +63,6 @@ class LineService
     public function MessageAction($event)
     {
         $text = $event->getText();
-        $message = '';
         error_log('timezone: '.$this->timeZone);
         switch ($this->timeZone) {
             case 'midnight':
@@ -85,17 +84,18 @@ class LineService
     // 時間帯を取得する
     public function getTimezone()
     {
-        $hour = date("i");
+        $hour = date("H");
         error_log('hour: '.$hour);
         if (5 < $hour && $hour <= 10 ) {
             $time = 'morning';
-        } elseif (10 < $hour && $hour <= 15) {
+        } elseif (10 < $hour && $hour < 16) {
             $time = 'noon';
-        } elseif (15 < $hour && $hour <= 22) {
+        } elseif (16 <= $hour && $hour <= 21) {
             $time = 'night';
         } else {
             $time = 'midnight';
         }
+        return $time;
     }
 
     // 現在地送るボタン
