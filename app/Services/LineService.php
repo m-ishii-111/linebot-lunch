@@ -64,6 +64,7 @@ class LineService
     {
         $text = $event->getText();
         $message = '';
+        error_log('timezone: '.$this->timeZone);
         switch ($this->timeZone) {
             case 'midnight':
                 $message = "こんな夜遅くに店探すの？\n";
@@ -85,6 +86,7 @@ class LineService
     public function getTimezone()
     {
         $hour = date("i");
+        error_log('hour: '.$hour);
         if (5 < $hour && $hour <= 10 ) {
             $time = 'morning';
         } elseif (10 < $hour && $hour <= 15) {
