@@ -20,5 +20,8 @@ Route::get('/', function () {
 Route::post('line/webhook', [LineController::class, 'webhook'])->name('line.webhook');
 Auth::routes(['register' => false]);
 
-Route::get('/home', [App\Http\Controllers\MessageMstController::class, 'index'])->name('home');
-Route::post('/home', [App\Http\Controllers\MessageMstController::class, 'store'])->name('store');
+
+Route::middleware(['auth'], function () {
+    Route::get('/home', [App\Http\Controllers\MessageMstController::class, 'index'])->name('home');
+    Route::post('/home', [App\Http\Controllers\MessageMstController::class, 'store'])->name('store');
+});
