@@ -66,16 +66,16 @@ class LineService
         error_log('timezone: '.$this->timeZone);
         switch ($this->timeZone) {
             case 'midnight':
-                $message = "こんな夜遅くに店探すの？\n";
+                $message = "こんな夜遅くに店探すの...？\n\n";
                 break;
             case 'morning':
-                $message = "おはよう！\n";
+                $message = "おはよう！\nいい朝だね！\n";
                 break;
             case 'noon':
-                $message = "こんにちは！\nランチの時間だね！\n";
+                $message = "こんにちは！\nランチの時間だね！\n\n";
                 break;
             case 'night':
-                $message = "こんばんは！\n今日はどこで食べる？\n";
+                $message = "こんばんは！\n今日はどこで食べる？\n\n";
                 break;
             default:
                 $message = "こんにちは！\n";
