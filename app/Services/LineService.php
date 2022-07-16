@@ -133,7 +133,7 @@ class LineService
             $shops = $shop_filter_id;
         }
 
-        $shop = array_rand($shops);
+        $shop = $shops[array_rand($shops)];
         error_log(print_r($shop, true));
         $this->shopLog->insertLog($lineUserId, $shop);
 
