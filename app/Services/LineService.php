@@ -79,22 +79,6 @@ class LineService
         $messageBuilder = $this->requireLocation($event, $message);
 
         return $messageBuilder;
-        // $message = "こんにちは！\n";
-        // switch ($text) {
-        //     case 'おやすみ':
-        //         $message = "おやすみなさい\nよい夢を...zzZ";
-        //         $messageBuilder = new TextMessageBuilder($message);
-        //         break;
-        //     case 'おはよう':
-        //         $message = "おはようございます！\n";
-        //     case 'こんにちは':
-        //         $message = "こんにちは！\n";
-        //     case "こんばんは":
-        //         $message = "こんばんは！\n";
-        //     default:
-        //         $messageBuilder = $this->requireLocation($event, $message);
-        // }
-        // return $messageBuilder;
     }
 
     // 時間帯を取得する
@@ -140,7 +124,6 @@ class LineService
         $shops = $restaurants['shop'];
         if ($count != $logsCount || $logsCount != 0) {
             $shop_filter_id = array_filter($shops, function ($shop) use ($shopIds) {
-                error_log(print_r($shop));
                 return !in_array($shop['id'], $shopIds);
             });
             $count = count($shop_filter_id) - 1;
@@ -149,11 +132,12 @@ class LineService
 
         $shopId = ($count == 0) ? 0 : mt_rand(0, $count);
         $shop = $shops[$shopId];
+        error_log(print_r($shop, true));
         $this->shopLog->insertLog($lineUserId, $shop);
 
         $postJsonArray = $this->returnFlexJson($shop);
         $postArray = ['type' => 'flex', 'altText' => 'flex message', 'contents' => $postJsonArray];
-        $result = json_encode(['replyToken' => $replyToken, 'to' => [$lineUserId], 'messages' => [$postArray]]);
+        $result = json_encode(['replyToken' => $replyToken, 'to' => [ $lineUserId ], 'messages' => [ $postArray ]]);
 
         $curl = curl_init();
         //curl_exec() の返り値を文字列で返す

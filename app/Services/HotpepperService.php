@@ -30,9 +30,9 @@ class HotpepperService
                 'lat'    => $latitude,
                 'lng'    => $longitude,
                 'range'  => $range,
-                'datum'  => 'world',
-                'order'  => '4',
-                'count'  => '30',
+                'datum'  => config('hotpepper.param_datum'),
+                'order'  => config('hotpepper.param_order'),
+                'count'  => config('hotpepper.param_count'),
                 'format' => 'json'
             ],
         ];
@@ -42,10 +42,11 @@ class HotpepperService
         if ($hour >= 11 && $hour < 16) {
             $options['query']['lunch'] = 1;
         }
-        if ($hour >= 16 || $hour < 23) {
+        // if ($hour >= 16 || $hour < 22) {
+        //     $options['query']['midnight'] = 1;
+        // }
+        if ($hour >= 21) {
             $options['query']['midnight'] = 1;
-        }
-        if ($hour >= 23) {
             $options['query']['midnight_meal'] = 1;
         }
 
