@@ -134,7 +134,6 @@ class LineService
         }
 
         $shop = $shops[array_rand($shops)];
-        error_log(print_r($shop, true));
         $this->shopLog->insertLog($lineUserId, $shop);
 
         $postJsonArray = $this->returnFlexJson($shop);
@@ -156,6 +155,8 @@ class LineService
         $curlResult = curl_exec($curl);
 
         curl_close($curl);
+
+        $this->SendReplyMessage($replyToken, 'これなんてどう？');
 
         return $curlResult;
     }
