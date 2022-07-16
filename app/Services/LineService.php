@@ -126,12 +126,14 @@ class LineService
             $shop_filter_id = array_filter($shops, function ($shop) use ($shopIds) {
                 return !in_array($shop['id'], $shopIds);
             });
-            $count = count($shop_filter_id) - 1;
+            if (count($shop_filter_id) == 0) {
+                // 0件なら終わる
+                $this->SendReplyMessage($replyToken, $this->messages['location'][9]);
+            }
             $shops = $shop_filter_id;
         }
 
-        $shopId = ($count == 0) ? 0 : mt_rand(0, $count);
-        $shop = $shops[$shopId];
+        $shop = array_rand($shops);
         error_log(print_r($shop, true));
         $this->shopLog->insertLog($lineUserId, $shop);
 
