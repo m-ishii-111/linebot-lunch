@@ -10,6 +10,8 @@ use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 use LINE\LINEBot\MessageBuilder\TemplateMessageBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
+use LINE\LINEBot\MessageBuilder\StickerMessageBuilder;
+
 use LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder;
 
 class LineService
@@ -175,7 +177,17 @@ class LineService
     // StampAction
     public function StampAction($event)
     {
-        return new TextMessageBuilder($this->messages['stamp'][0]);
+        return new StickerMessageBuilder('11538', '51626501');
+        // return new TextMessageBuilder($this->messages['stamp'][0]);
+    }
+
+    public function stampJson()
+    {
+        return [
+            'type' => 'sticker',
+            'packageId' => '11538',
+            'stickerId' => '51626501'
+        ];
     }
 
     // UnknownAction
