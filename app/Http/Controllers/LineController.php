@@ -64,7 +64,7 @@ class LineController extends Controller
                     break;
 
                 //スタンプの受信
-                case $event instanceof \LINE\LINEBot\Event\StickerMessage:
+                case $event instanceof \LINE\LINEBot\Event\MessageEvent\StickerMessage:
                     $messageBuilder = $this->lineService->StampAction($event);
                     break;
 
@@ -79,7 +79,7 @@ class LineController extends Controller
                     // $body = $event->getEventBody();
                     // logger()->warning('Unknown event. ['. get_class($event) . ']', compact('body'));
                     error_log('Unknown of Undifined event :'.get_class($event).' / '.$event->getType());
-                    $messageBuilder = $this->lineService->UnknownAction($event, $message);
+                    $messageBuilder = $this->lineService->UnknownAction($event, $replyMessage);
                     break;
             }
             $bot->replyMessage($replyToken, $messageBuilder);
