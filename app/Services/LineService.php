@@ -67,14 +67,19 @@ class LineService
         switch ($this->timeZone) {
             case 'midnight':
                 $message = "こんな夜遅くに店探すの？\n";
+                break;
             case 'morning':
                 $message = "おはよう！\n";
+                break;
             case 'noon':
                 $message = "こんにちは！\nランチの時間だね！\n";
+                break;
             case 'night':
                 $message = "こんばんは！\n今日はどこで食べる？\n";
+                break;
             default:
                 $message = "こんにちは！\n";
+                break;
         }
         $messageBuilder = $this->requireLocation($event, $message);
 
