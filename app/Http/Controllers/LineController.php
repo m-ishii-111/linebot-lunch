@@ -40,7 +40,6 @@ class LineController extends Controller
         foreach ($events as $event)
         {
             $replyToken = $event->getReplyToken();
-            $replyMessage = 'その操作はサポートしてません。.[' . get_class($event) . '][' . $event->getType() . ']';
 
             switch (true) {
                 //友達登録＆ブロック解除
@@ -60,6 +59,7 @@ class LineController extends Controller
                         $this->lineService->SendReplyMessage($replyToken, $restaurants);
                     }
                     $this->lineService->LocationAction($event, $restaurants);
+                    // 次へボタンを送信する
                     return 'ok!';
                     break;
 
@@ -75,9 +75,12 @@ class LineController extends Controller
                 case $event instanceof \LINE\LINEBot\Event\UnfollowEvent:
                     break;
                 default:
-                    $body = $event->getEventBody();
-                    logger()->warning('Unknown event. ['. get_class($event) . ']', compact('body'));
+                    $replyMessage = 'その操作はサポートしてません。.[' . get_class($event) . '][' . $event->getType() . ']';
+                    // $body = $event->getEventBody();
+                    // logger()->warning('Unknown event. ['. get_class($event) . ']', compact('body'));
+                    error_log('Unknown of Undifined event :'.get_class($event).' / '.$event->getType());
                     $messageBuilder = $this->lineService->UnknownAction($event, $message);
+                    break;
             }
             $bot->replyMessage($replyToken, $messageBuilder);
         }
