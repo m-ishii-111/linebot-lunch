@@ -25,3 +25,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', [App\Http\Controllers\MessageMstController::class, 'index'])->name('home');
     Route::post('/home', [App\Http\Controllers\MessageMstController::class, 'store'])->name('store');
 });
+
+Route::get('/cron', function () {
+    return ['status' => 200];
+});
