@@ -56,14 +56,13 @@ class LineService
     public function FollowAction($event)
     {
         $message = $this->messages['follow'][0];
-        return new TemplateMessageBuilder($message);
+        return new TemplateMessageBuilder('フォローメッセージ', $message);
     }
 
     // TextMessage
     public function MessageAction($event)
     {
         $text = $event->getText();
-        error_log('timezone: '.$this->timeZone);
         switch ($this->timeZone) {
             case 'midnight':
                 $message = "こんな夜遅くに店探すの...？\n\n";
