@@ -39,7 +39,8 @@
 
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
                 <div>
-                    <h2>{{ config('app.name') }}</h2>
+                    <h2 class="text-gray-700">{{ config('app.name') }}</h2>
+                    <p class="text-gray-600">近場の店を1件サジェストします。</p>
                 </div>
                 <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
                     <img class="mx-auto" src="https://qr-official.line.me/sid/L/391jueqe.png">
@@ -49,22 +50,35 @@
                     <span>友達追加してね！</span>
                 </div>
 
+                <div class="description ">
+                    <ul class="text-sm text-gray-500" style="list-style-type: none;">
+                        <li>無料でお使いいただけます。</li>
+                        <li>位置情報を使用して、現在地より500m以内の店を探します。</li>
+                        <li>一度にサジェストされるのは1件のみです。</li>
+                        <li>当サービスを利用して</li>
+                    </ul>
+                </div>
+
                 <div class="flex justify-center mt-4 sm:items-center sm:justify-between">
                     <div class="text-center text-sm text-gray-500 sm:text-left">
                         <div class="flex items-center">
                             <i class="fa-brands fa-github"></i>
 
-                            <a href="https://laravel.bigcartel.com" class="ml-1 underline">
+                            <a href="https://github.com/m-ishii-111">
                                 GitHub
                             </a>
                         </div>
                     </div>
 
-                    <footer>
+                    <div>
+                        <a href="http://webservice.recruit.co.jp/"><img style="vertical-align: middle;" src="http://webservice.recruit.co.jp/banner/hotpepper-s.gif" alt="ホットペッパー Webサービス" width="135" height="17" border="0" title="ホットペッパー Webサービス"></a>
+                    </div>
+
+                    <div>
                         <div class="ml-4 text-center text-sm text-gray-500 sm:text-right sm:ml-0">
                             © m-ishii-111 2022
                         </div>
-                    </footer>
+                    </div>
                 </div>
             </div>
         </div>
