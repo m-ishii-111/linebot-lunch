@@ -18,6 +18,7 @@
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
+                background-image: {{ url('../images/cooking-barbecue-on-charcoal-grill.jpg') }};
             }
         </style>
     </head>
@@ -55,29 +56,33 @@
                         <li>無料でお使いいただけます。</li>
                         <li>位置情報を使用して、現在地より500m以内の店を探します。</li>
                         <li>一度にサジェストされるのは1件のみです。</li>
-                        <li>当サービスを利用して</li>
                     </ul>
                 </div>
 
-                <div class="flex justify-center mt-4 sm:items-center sm:justify-between">
-                    <div class="text-center text-sm text-gray-500 sm:text-left">
-                        <div class="flex items-center">
-                            <i class="fa-brands fa-github"></i>
+                <div class="mt-4">
+                    <div class="flex justify-center mt-1 sm:items-center sm:justify-between">
+                        <div class="text-center text-sm text-gray-500 sm:text-left">
+                            <div class="flex items-center">
+                                <i class="fa-brands fa-github"></i>
 
-                            <a href="https://github.com/m-ishii-111">
-                                GitHub
-                            </a>
+                                <a href="https://github.com/m-ishii-111">
+                                    GitHub
+                                </a>
+                            </div>
+                        </div>
+
+                        <div>
+                            <a href="http://webservice.recruit.co.jp/"><img style="vertical-align: middle;" src="http://webservice.recruit.co.jp/banner/hotpepper-s.gif" alt="ホットペッパー Webサービス" width="135" height="17" border="0" title="ホットペッパー Webサービス"></a>
+                        </div>
+
+                        <div>
+                            <div class="ml-4 text-center text-sm text-gray-500 sm:text-right sm:ml-0">
+                                © m-ishii-111 2022
+                            </div>
                         </div>
                     </div>
-
                     <div>
-                        <a href="http://webservice.recruit.co.jp/"><img style="vertical-align: middle;" src="http://webservice.recruit.co.jp/banner/hotpepper-s.gif" alt="ホットペッパー Webサービス" width="135" height="17" border="0" title="ホットペッパー Webサービス"></a>
-                    </div>
-
-                    <div>
-                        <div class="ml-4 text-center text-sm text-gray-500 sm:text-right sm:ml-0">
-                            © m-ishii-111 2022
-                        </div>
+                        <a href="https://jp.freepik.com/photos/food" class="text-sm text-gray-500">Rawpixel.com - jp.freepik.com によって作成された food 写真</a>
                     </div>
                 </div>
             </div>
