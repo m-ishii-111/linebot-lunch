@@ -56,7 +56,7 @@ class LineService
     public function FollowAction($event)
     {
         $message = $this->messages['follow'][0];
-        return new TemplateMessageBuilder('フォローメッセージ', $message);
+        $this->SendReplyMessage($event->getReplyToken(), $message);
     }
 
     // TextMessage
