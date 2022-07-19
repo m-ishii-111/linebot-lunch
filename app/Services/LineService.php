@@ -169,6 +169,7 @@ class LineService
     // StampAction
     public function StampAction($event)
     {
+        // GoodJobStampを送信
         return new StickerMessageBuilder('11538', '51626501');
         // return new TextMessageBuilder($this->messages['stamp'][0]);
     }

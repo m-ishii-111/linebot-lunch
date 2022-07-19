@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'LINE Bot chan'),
+    'name' => env('APP_NAME', 'LINEBot lunch'),
 
     /*
     |--------------------------------------------------------------------------
