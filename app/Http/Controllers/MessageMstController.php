@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MessageMst;
+use App\Http\Requests\MessageMstPostRequest;
 
 class MessageMstController extends Controller
 {
@@ -26,9 +27,9 @@ class MessageMstController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(MessageMstPostRequest $request)
     {
-        $inputs = $request->input();
+        $inputs = $request->validated();
         $this->messageMst->upsertMessage($inputs);
         return redirect('/home')->with('flash_message', '登録しました！');
     }
