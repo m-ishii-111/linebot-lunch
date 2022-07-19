@@ -18,7 +18,7 @@
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
-                background-image: {{ url('../images/cooking-barbecue-on-charcoal-grill.jpg') }};
+                background-image: {{ url('/images/cooking-barbecue-on-charcoal-grill.jpg') }};
             }
         </style>
     </head>
