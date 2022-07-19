@@ -18,7 +18,6 @@
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
-                background-image: {{ url('/images/cooking-barbecue-on-charcoal-grill.jpg') }};
             }
         </style>
     </head>
@@ -80,9 +79,6 @@
                                 © m-ishii-111 2022
                             </div>
                         </div>
-                    </div>
-                    <div>
-                        <a href="https://jp.freepik.com/photos/food" class="text-sm text-gray-500">Rawpixel.com - jp.freepik.com によって作成された food 写真</a>
                     </div>
                 </div>
             </div>
