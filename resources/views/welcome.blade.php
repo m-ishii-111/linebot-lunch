@@ -38,7 +38,7 @@
             @endif
 
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-                <div>
+                <div class="text-center">
                     <h2 class="text-gray-700">{{ config('app.name') }}</h2>
                     <p class="text-gray-600">近場の店を1件サジェストします。</p>
                 </div>
