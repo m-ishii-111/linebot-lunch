@@ -55,7 +55,7 @@ class LineService
     // 友達追加とブロック解除
     public function FollowAction($event)
     {
-        $message = $messages['follow'][0];
+        $message = $this->messages['follow'][0];
         return new TemplateMessageBuilder($message);
     }
 
