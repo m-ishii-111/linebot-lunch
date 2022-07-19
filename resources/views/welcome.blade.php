@@ -38,6 +38,9 @@
             @endif
 
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+                <div>
+                    <h2>{{ config('app.name') }}</h2>
+                </div>
                 <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
                     <img class="mx-auto" src="https://qr-official.line.me/sid/L/391jueqe.png">
                 </div>
