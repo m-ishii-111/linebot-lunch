@@ -119,6 +119,9 @@ class LineService
             $shops = $shop_filter_id;
         }
 
+        $lunch = array_column($shops, 'lunch');
+        error_log(print_r($lunch, true));
+
         $shop = $shops[array_rand($shops)];
         $this->shopLog->insertLog($lineUserId, $shop);
 
