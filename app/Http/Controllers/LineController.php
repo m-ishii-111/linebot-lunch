@@ -36,6 +36,8 @@ class LineController extends Controller
             abort(400);
         }
 
+        error_log(print_r($request->session()->all(), true));
+
         $bot = $this->lineService->getBot();
         $events = $bot->parseEventRequest($request->getContent(), $signature);
         foreach ($events as $event)
