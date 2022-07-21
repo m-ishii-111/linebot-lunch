@@ -43,6 +43,12 @@ class HotpepperService
         $longitude = $event->getLongitude();
         $range = 2;
 
+        session([
+            'user_id' => $event->getUserId(),
+            'latitude' => $latitude,
+            'longitude' => $longitude
+        ]);
+
         $options = [
             'query' => [
                 'key'    => $this->apiKey,

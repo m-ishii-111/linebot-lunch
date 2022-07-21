@@ -89,7 +89,6 @@ class LineService
     public function getTimezone()
     {
         $hour = date("H");
-        error_log('hour: '.$hour);
         if (5 < $hour && $hour <= 10 ) {
             $time = 'morning';
         } elseif (10 < $hour && $hour < 16) {
