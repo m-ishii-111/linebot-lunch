@@ -118,7 +118,7 @@ class LineService
             }
             $shops = $shop_filter_id;
 
-            if (timezone() == 'lunch') {
+            if (timezone() == 'noon') {
                 $shop_filter_lunch = array_filter($shops, function ($shop) {
                    return $shop['lunch'] == 'あり';
                 });
@@ -386,7 +386,7 @@ class LineService
         ];
 
         // お昼時はランチ情報を追加
-        if (timezone() == 'lunch') {
+        if (timezone() == 'noon') {
             $content['body']['contents'][2]['contents'][] = [
                 'type' => 'box',
                 'layout' => 'baseline',
