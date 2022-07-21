@@ -117,6 +117,16 @@ class LineService
                 $this->SendReplyMessage($replyToken, $this->messages['location'][9]);
             }
             $shops = $shop_filter_id;
+
+            if (timezone() == 'lunch') {
+                $shop_filter_lunch = array_filter($shops, function ($shop) {
+                   return $shop['lunch'] == 'あり';
+                });
+                if (count($shop_filter_lunch) < 1) {
+                    $this->SendReplyMessage($replyToken, $this->messages['location'][9]);
+                }
+                $shops = $shops_filter_lunch;
+            }
         }
 
         $lunch = array_column($shops, 'lunch');
