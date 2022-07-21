@@ -125,7 +125,7 @@ class LineService
                 if (count($shop_filter_lunch) < 1) {
                     $this->SendReplyMessage($replyToken, $this->messages['location'][9]);
                 }
-                $shops = $shops_filter_lunch;
+                $shops = $shop_filter_lunch;
             }
         }
 
