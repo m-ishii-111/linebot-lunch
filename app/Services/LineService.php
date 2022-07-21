@@ -25,8 +25,6 @@ class LineService
     private $messages;
     private $shopLog;
 
-    private $timezone;
-
     public function __construct($accessToken, $channelSecret)
     {
         $this->accessToken = $accessToken;
@@ -37,8 +35,6 @@ class LineService
         $messagesMst = new MessageMst();
         $this->messages = $messagesMst->getMessages();
         $this->shopLog = new ShopLog();
-
-        $this->timeZone = $this->getTimezone();
     }
 
     public function getBot()
@@ -63,7 +59,7 @@ class LineService
     public function MessageAction($event)
     {
         $text = $event->getText();
-        switch ($this->timeZone) {
+        switch ( timezone() ) {
             case 'midnight':
                 $message = "こんな夜遅くに店探すの...？\n\n";
                 break;
@@ -83,22 +79,6 @@ class LineService
         $messageBuilder = $this->requireLocation($event, $message);
 
         return $messageBuilder;
-    }
-
-    // 時間帯を取得する
-    public function getTimezone()
-    {
-        $hour = date("H");
-        if (5 < $hour && $hour <= 10 ) {
-            $time = 'morning';
-        } elseif (10 < $hour && $hour < 16) {
-            $time = 'noon';
-        } elseif (16 <= $hour && $hour <= 21) {
-            $time = 'night';
-        } else {
-            $time = 'midnight';
-        }
-        return $time;
     }
 
     // 現在地送るボタン
@@ -393,7 +373,7 @@ class LineService
         ];
 
         // お昼時はランチ情報を追加
-        if ($this->timeZone == 'lunch') {
+        if (timezone() == 'lunch') {
             $content['body']['contents'][2]['contents'][] = [
                 'type' => 'box',
                 'layout' => 'baseline',

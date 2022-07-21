@@ -57,11 +57,10 @@ class HotpepperService
         ];
 
         // 時間で勝手にパラメータつけちゃう
-        $hour = date('H');
-        if (10 < $hour && $hour < 16) {
+        if (timezone() == 'lunch') {
             $options['query']['lunch'] = 1;
         }
-        if ($hour >= 21) {
+        if (timezone() == 'midnight') {
             $options['query']['midnight'] = 1;
             $options['query']['midnight_meal'] = 1;
         }
