@@ -143,7 +143,7 @@ class LineService
         $this->shopLog->insertLog($lineUserId, $shop);
 
         $postJsonArray = $this->returnFlexJson($shop);
-        $postArray = ['type' => 'flex', 'altText' => $shop['name'], 'contents' => [ $postJsonArray, $postJsonArray ]];
+        $postArray = ['type' => 'flex', 'altText' => $shop['name'], 'contents' => $postJsonArray];
         $result = json_encode(['replyToken' => $replyToken, 'to' => [ $lineUserId ], 'messages' => [ $postArray ]]);
 
         $curl = curl_init();
