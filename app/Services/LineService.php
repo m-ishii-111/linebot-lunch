@@ -116,12 +116,13 @@ class LineService
     {
         $replyToken = $event->getReplyToken();
         $lineUserId = $event->getUserId();
-        if (!isset($restaurants['results_returned']) || $restaurants['results_returned'] == 0) {
+        $count = $restaurants['results_returned'];
+
+        if (!isset($count) || $count == 0) {
             error_log('line_user_id: '.$lineUserId.', error: restaurants not found.');
             $this->SendReplyMessage($replyToken, $this->messages['location'][9]);
         }
 
-        $count = $restaurants['results_returned'] - 1;
         $logs = $this->shopLog->getWeekLogs($lineUserId);
         $shopIds = array_column($logs, 'hp_shop_id');
         // $genreCodes = array_column($logs, 'hp_genre_code');
@@ -143,7 +144,7 @@ class LineService
         $this->shopLog->insertLog($lineUserId, $shop);
 
         $postJsonArray = $this->returnFlexJson($shop);
-        $postArray = ['type' => 'flex', 'altText' => 'flex message', 'contents' => $postJsonArray];
+        $postArray = ['type' => 'flex', 'altText' => $shop['name'], 'contents' => $postJsonArray];
         $result = json_encode(['replyToken' => $replyToken, 'to' => [ $lineUserId ], 'messages' => [ $postArray ]]);
 
         $curl = curl_init();

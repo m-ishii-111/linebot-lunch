@@ -27,7 +27,7 @@ class LineController extends Controller
     public function webhook(Request $request)
     {
         // 署名検証
-        $signature = $request->header('x-line-signature');
+        $signature = $request->header(config('line.header_signature'));
         if (!SignatureValidator::validateSignature(
                 $request->getContent(),
                 config('line.channel_secret'),
@@ -75,7 +75,7 @@ class LineController extends Controller
                 case $event instanceof \LINE\LINEBot\Event\UnfollowEvent:
                 default:
                     $replyMessage = 'その操作はサポートしてません。.[' . get_class($event) . '][' . $event->getType() . ']';
-                    error_log('Unknown of Undifined event :'.get_class($event).' / '.$event->getType());
+                    error_log('Unknown or Undifined event :'.get_class($event).' / '.$event->getType());
                     $messageBuilder = $this->lineService->UnknownAction($event, $replyMessage);
                     break;
             }

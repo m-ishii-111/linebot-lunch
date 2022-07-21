@@ -8,18 +8,37 @@ class HotpepperService
 {
     private $apiKey;
     private $baseUrl;
+    private $client;
 
     public function __construct($apiKey, $baseUrl)
     {
         $this->apiKey  = $apiKey;
         $this->baseUrl = $baseUrl;
+        $this->client = new Client();
+    }
+
+    public function getGenreMaster()
+    {
+        $method = 'GET';
+        $format = 'json';
+
+        $options = [
+            'query' => [
+                'key'    => $this->apiKey,
+                'format' => $format,
+            ],
+        ];
+
+        $response = $this->client->request($method, config('hotpepper.genre_url'), $options);
+        $genres = json_decode($response->getBody(), true)['results'];
+
+        return $genres;
     }
 
     public function searchGourmet($event)
     {
-        $client = new Client();
-
         $method = 'GET';
+        $format = 'json';
         $latitude  = $event->getLatitude();
         $longitude = $event->getLongitude();
         $range = 2;
@@ -33,7 +52,7 @@ class HotpepperService
                 'datum'  => config('hotpepper.param_datum'),
                 'order'  => config('hotpepper.param_order'),
                 'count'  => config('hotpepper.param_count'),
-                'format' => 'json'
+                'format' => $format
             ],
         ];
 
@@ -47,7 +66,7 @@ class HotpepperService
             $options['query']['midnight_meal'] = 1;
         }
 
-        $response = $client->request($method, $this->baseUrl, $options);
+        $response = $this->client->request($method, $this->baseUrl, $options);
         $restaurants = json_decode($response->getBody(), true)['results'];
 
         return $restaurants;

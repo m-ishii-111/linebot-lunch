@@ -10,6 +10,8 @@ class ShopLog extends Model
 {
     use HasFactory;
 
+    private $limit = 10;
+
     protected $fillable = [
         'line_user_id',
         'hp_shop_id',
@@ -22,7 +24,7 @@ class ShopLog extends Model
         return $this->select('hp_shop_id', 'hp_genre_code')
                     ->where('line_user_id', $lineUserId)
                     ->orderBy('search_date', 'desc')
-                    ->limit(10)
+                    ->limit($this->limit)
                     ->get()
                     ->toArray();
     }
