@@ -46,12 +46,13 @@ class LineController extends Controller
             switch (true) {
                 //友達登録＆ブロック解除
                 case $event instanceof \LINE\LINEBot\Event\FollowEvent:
-                    $messageBuilder = $this->lineService->followAction($event);
+                    $messageArray = $this->lineService->followAction($event);
                     break;
 
                 //メッセージの受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage:
                     $messageArray = $this->lineService->MessageAction($event);
+                    Log::debug($messgeArray);
                     break;
 
                 //位置情報の受信
@@ -90,6 +91,8 @@ class LineController extends Controller
             "to"         => $lineUserId,
             "messages"   => $response
         ];
+
+        Log::debug($response);
 
         $curl = curl_init( config('line.curl_url') );
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
