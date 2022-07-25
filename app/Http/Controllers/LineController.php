@@ -41,6 +41,7 @@ class LineController extends Controller
         foreach ($events as $event)
         {
             $replyToken = $event->getReplyToken();
+            $lineUserId = $event->getUserId();
 
             switch (true) {
                 //友達登録＆ブロック解除
