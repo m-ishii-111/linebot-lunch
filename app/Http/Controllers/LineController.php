@@ -95,7 +95,7 @@ class LineController extends Controller
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($result));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($post_data));
         curl_setopt($curl, CURLOPT_HTTPHEADER, [
             'Authorization: Bearer '.config('line.access_token'),
             'Content-Type: application/json; charset=UTF-8']
