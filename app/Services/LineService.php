@@ -95,60 +95,63 @@ class LineService
     {
         $replyToken = $event->getReplyToken();
         $lineUserId = $event->getUserId();
-        $count = $restaurants['results_returned'];
 
-        if (!isset($count) || $count == 0) {
+        if ($restaurants['results_returned'] < 1) {
             error_log('line_user_id: '.$lineUserId.', error: restaurants not found.');
             $this->SendReplyMessage($replyToken, $this->messages['location'][9]);
         }
 
+        $shops = $restaurants['shop'];
+
+        //suggest filter
         $logs = $this->shopLog->getWeekLogs($lineUserId);
         $shopIds = array_column($logs, 'hp_shop_id');
-        // $genreCodes = array_column($logs, 'hp_genre_code');
-        $logsCount = count($shopIds);
+        $suggest_filter = array_filter($shops, function ($shop) use ($shopIds) {
+            return !in_array($shop['id'], $shopIds);
+        });
+        $shop = $suggest_filter;
 
-        $shops = $restaurants['shop'];
-        if ($count != $logsCount || $logsCount != 0) {
-            $shop_filter_id = array_filter($shops, function ($shop) use ($shopIds) {
-                return !in_array($shop['id'], $shopIds);
+        // lunch filter
+        if (timezone() == 'noon') {
+            $lunch_filter = array_filter($shops, function ($shop) {
+                return $shop['lunch'] == 'あり';
             });
-            if (count($shop_filter_id) == 0) {
-                // 0件なら終わる
-                $this->SendReplyMessage($replyToken, $this->messages['location'][9]);
-            }
-            $shops = $shop_filter_id;
-
-            if (timezone() == 'noon') {
-                $shop_filter_lunch = array_filter($shops, function ($shop) {
-                   return $shop['lunch'] == 'あり';
-                });
-                if (count($shop_filter_lunch) < 1) {
-                    $this->SendReplyMessage($replyToken, $this->messages['location'][9]);
-                }
-                $shops = $shop_filter_lunch;
-            }
+            $shops = $lunch_filter;
         }
 
-        $lunch = array_column($shops, 'lunch');
-        error_log(print_r($lunch, true));
+        //midnight filter
+        if (timezone() == 'midnight') {
+            $midnight_filter = array_filter($shops, function ($shop) {
+                return $shop['midnight'] == '営業している';
+            });
+            $shops = $midnight_filter;
+        }
+
+        if (count($shops) < 1) {
+            error_log('line_user_id: '.$lineUserId.', info: shops is empty.');
+            $this->SendReplyMessage($replyToken, $this->messages['location'][9]);
+        }
 
         $shop = $shops[array_rand($shops)];
         $this->shopLog->insertLog($lineUserId, $shop);
 
-        $postJsonArray = $this->returnFlexJson($shop);
-        $postArray = ['type' => 'flex', 'altText' => $shop['name'], 'contents' => $postJsonArray];
-        $result = json_encode(['replyToken' => $replyToken, 'to' => [ $lineUserId ], 'messages' => [ $postArray ]]);
+        $postArray = [
+            'type'     => 'flex',
+            'altText'  => $shop['name'],
+            'contents' => $this->returnFlexJson($shop)
+        ];
+
+        $result = json_encode([
+            'replyToken' => $replyToken,
+            'to'         => [ $lineUserId ],
+            'messages'   => [ $postArray ]
+        ]);
 
         $curl = curl_init();
-        //curl_exec() の返り値を文字列で返す
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        //POSTリクエスト
         curl_setopt($curl, CURLOPT_POST, true);
-        //ヘッダを指定
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->accessToken, 'Content-Type: application/json; charset=UTF-8'));
-        //リクエストURL
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->accessToken, 'Content-Type: application/json; charset=UTF-8']);
         curl_setopt($curl, CURLOPT_URL, 'https://api.line.me/v2/bot/message/reply');
-        //送信するデータ
         curl_setopt($curl, CURLOPT_POSTFIELDS, $result);
 
         $curlResult = curl_exec($curl);
