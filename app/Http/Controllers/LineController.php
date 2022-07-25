@@ -93,9 +93,8 @@ class LineController extends Controller
             "messages"   => $response
         ];
 
-        Log::debug($response);
-
-        $curl = curl_init( config('line.curl_url') );
+        Log::debug(config('line.curl_url'));
+        $curl = curl_init( $uri );
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
