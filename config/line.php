@@ -5,5 +5,6 @@ return [
     'channel_secret' => env('LINE_CHANNEL_SECRET'),
     'noimage'        => 'https://gyazo.com/7b6bf728a87623915dce1be1a1549b92',
     'google_map_uri' => 'https://www.google.com/maps/search/',
-    'header_signature' => 'x-line-signature'
+    'header_signature' => 'x-line-signature',
+    'curl_uri' => 'https://api.line.me/v2/bot/message/reply'
 ];

@@ -50,23 +50,19 @@ class LineController extends Controller
 
                 //メッセージの受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage:
-                    $messageBuilder = $this->lineService->MessageAction($event);
+                    $messageArray = $this->lineService->MessageAction($event);
                     break;
 
                 //位置情報の受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\LocationMessage:
                     $restaurants = $this->hotpepperService->searchGourmet($event);
-                    if (!$restaurants) {
-                        $this->lineService->SendReplyMessage($replyToken, $restaurants);
-                    }
-                    $this->lineService->LocationAction($event, $restaurants);
+                    $messageArray = $this->lineService->LocationAction($event, $restaurants);
                     // 次へボタンを送信する
-                    return 'ok!';
                     break;
 
                 //スタンプの受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\StickerMessage:
-                    $messageBuilder = $this->lineService->StampAction($event);
+                    $messageArray = $this->lineService->StampAction($event);
                     break;
 
                 //選択肢とか選んだ時に受信するイベント
@@ -74,13 +70,37 @@ class LineController extends Controller
                 //ブロック
                 case $event instanceof \LINE\LINEBot\Event\UnfollowEvent:
                 default:
-                    $replyMessage = 'その操作はサポートしてません。.[' . get_class($event) . '][' . $event->getType() . ']';
+                    $message = 'その操作はサポートしてません。.[' . get_class($event) . '][' . $event->getType() . ']';
                     error_log('Unknown or Undifined event :'.get_class($event).' / '.$event->getType());
-                    $messageBuilder = $this->lineService->UnknownAction($event, $replyMessage);
+                    $messageArray = $this->lineService->UnknownAction($event, $message);
                     break;
             }
-            $bot->replyMessage($replyToken, $messageBuilder);
+            $this->sendMessage($replyToken, $lineUserId, $messageArray);
+            // $bot->replyMessage($replyToken, $messageBuilder);
         }
         return 'ok!';
+    }
+
+    private function sendMessage(string $replyToken, string $lineUserId, array $response)
+    {
+        $uri = 'https://api.line.me/v2/bot/message/reply';
+        $post_data = [
+            "replyToken" => $replyToken,
+            "to"         => $lineUserId,
+            "messages"   => $response
+        ];
+
+        $curl = curl_init( config('line.curl_url') );
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($result));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            'Authorization: Bearer '.config('line.access_token'),
+            'Content-Type: application/json; charset=UTF-8']
+        );
+
+        $curlResult = curl_exec($curl);
+        curl_close($curl);
     }
 }

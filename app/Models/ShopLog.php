@@ -19,7 +19,7 @@ class ShopLog extends Model
         'hp_genre_name',
     ];
 
-    public function getWeekLogs($lineUserId)
+    public function getWeekLogs(string $lineUserId)
     {
         return $this->select('hp_shop_id', 'hp_genre_code')
                     ->where('line_user_id', $lineUserId)
@@ -29,7 +29,7 @@ class ShopLog extends Model
                     ->toArray();
     }
 
-    public function insertLog($lineUserId, $shop)
+    public function insertLog(string $lineUserId, array $shop)
     {
         $this->insert([
             'line_user_id' => $lineUserId,
@@ -37,5 +37,10 @@ class ShopLog extends Model
             'hp_genre_code' => $shop['genre']['code'],
             'hp_genre_name' => $shop['genre']['name'],
         ]);
+    }
+
+    public function isExists(string $lineUserId): bool
+    {
+        return $this->where('line_user_id', $lineUserId)->exists();
     }
 }

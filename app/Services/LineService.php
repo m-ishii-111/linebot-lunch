@@ -51,8 +51,12 @@ class LineService
     // 友達追加とブロック解除
     public function FollowAction($event)
     {
-        $message = $this->messages['follow'][0];
-        return new TextMessageBuilder($message);
+        $firstTime = !$this->shopLog->isExists($event->getUserId());
+        $message = $firstTime ? $this->messages['follow'][0] : "やっと...\n解除してくれたね...?";
+        return [
+            "type" => "text",
+            "text" => $this->messages['follow'][0],
+        ];
     }
 
     // TextMessage
@@ -76,9 +80,11 @@ class LineService
                 $message = "こんにちは！\n";
                 break;
         }
-        $messageBuilder = $this->requireLocation($event, $message);
 
-        return $messageBuilder;
+        if ($text == '他のお店を探す') {
+            return [ $this->replyMessage('もう一回送って') ];
+        }
+        return [ $this->replyMessage("こんにちは！\nなにする？") ];
     }
 
     // 現在地送るボタン
@@ -88,6 +94,46 @@ class LineService
         $message = new ButtonTemplateBuilder(null, $word.$this->messages['location'][0], null, [$uri]);
         $templateMessageBuilder = new TemplateMessageBuilder('位置情報を送ってね', $message);
         return $templateMessageBuilder;
+    }
+
+    private function replyMessage(string $message): array
+    {
+        return [
+            "type" => "text",
+            "text" => $message,
+            "quickReply" => [
+                "items" => [
+                    [
+                        "type" => "action",
+                        "action" => [
+                            "type" => "location",
+                            "label" => "お店を探す！"
+                        ]
+                    ],
+                ]
+            ]
+        ];
+    }
+
+    private function afterReplyMessage(): array
+    {
+
+        return [
+            "type" => "text",
+            "text" => "ここでいい？",
+            "quickReply" => [
+                "items" => [
+                    [
+                        "type" => "action",
+                        "action" => [
+                            "type" => "message",
+                            "label" => "他のお店を探す",
+                            "text"  => "他のお店を探す"
+                        ]
+                    ],
+                ]
+            ]
+        ];
     }
 
     // LocationMessage
@@ -147,26 +193,15 @@ class LineService
             'messages'   => [ $postArray ]
         ]);
 
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->accessToken, 'Content-Type: application/json; charset=UTF-8']);
-        curl_setopt($curl, CURLOPT_URL, 'https://api.line.me/v2/bot/message/reply');
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $result);
-
-        $curlResult = curl_exec($curl);
-
-        curl_close($curl);
-
-        return $curlResult;
+        return [ $result, $this->afterReplyMessage() ];
     }
 
     // StampAction
     public function StampAction($event)
     {
         // GoodJobStampを送信
-        return new StickerMessageBuilder('11538', '51626501');
-        // return new TextMessageBuilder($this->messages['stamp'][0]);
+        // return new StickerMessageBuilder('11538', '51626501');
+        return $this->stampJson();
     }
 
     public function stampJson()
@@ -181,7 +216,10 @@ class LineService
     // UnknownAction
     public function UnknownAction($event, $message)
     {
-        return new TextMessageBuilder($message);
+        return [
+            "type" => "text",
+            "text" => "その操作はサポートされていません。"
+        ];
     }
 
     // flexMessage Template
