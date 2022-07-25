@@ -53,7 +53,7 @@ class LineController extends Controller
                 //メッセージの受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage:
                     $messageArray = $this->lineService->MessageAction($event);
-                    Log::debug($messgeArray);
+                    Log::debug($messageArray);
                     break;
 
                 //位置情報の受信
