@@ -12,6 +12,7 @@ use LINE\LINEBot\Event\MessageEvent\TextMessage;
 use LINE\LINEBot\Event\MessageEvent\LocationMessage;
 use LINE\LINEBot\Event\PostbackEvent;
 use LINE\LINEBot\Event\UnfollowEvent;
+use Log;
 
 class LineController extends Controller
 {
