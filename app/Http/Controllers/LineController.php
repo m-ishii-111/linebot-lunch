@@ -53,7 +53,6 @@ class LineController extends Controller
                 //メッセージの受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage:
                     $messageArray = $this->lineService->MessageAction($event);
-                    Log::debug($messageArray);
                     break;
 
                 //次候補
@@ -87,7 +86,7 @@ class LineController extends Controller
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\StickerMessage:
                     $messageArray = $this->lineService->StampAction($event);
                     break;
-                    break;
+
                 //ブロック
                 case $event instanceof \LINE\LINEBot\Event\UnfollowEvent:
                 default:
@@ -104,7 +103,7 @@ class LineController extends Controller
 
     private function sendMessage(string $replyToken, string $lineUserId, array $response)
     {
-        $uri = 'https://api.line.me/v2/bot/message/reply';
+        $uri = config('line.curl_uri');
         $post_data = [
             "replyToken" => $replyToken,
             "to"         => $lineUserId,

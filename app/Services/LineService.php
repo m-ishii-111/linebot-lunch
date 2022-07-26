@@ -52,6 +52,7 @@ class LineService
     public function FollowAction($event)
     {
         $firstTime = !$this->shopLog->isExists($event->getUserId());
+        error_log($firstTime);
         $message = $firstTime ? $this->messages['follow'][0] : "やっと...\n解除してくれたね...?";
         return [[
             "type" => "text",
@@ -103,11 +104,11 @@ class LineService
             "type" => "text",
             "text" => $message,
             "quickReply" => [
-                "items" => [
+                "items"  => [
                     [
-                        "type" => "action",
+                        "type"   => "action",
                         "action" => [
-                            "type" => "location",
+                            "type"  => "location",
                             "label" => "お店を探す！"
                         ]
                     ],
@@ -123,29 +124,29 @@ class LineService
             "type" => "text",
             "text" => "ここでいい？",
             "quickReply" => [
-                "items" => [
+                "items"  => [
                     [
-                        "type" => "action",
+                        "type"   => "action",
                         "action" => [
-                            "type" => "message",
+                            "type"  => "message",
                             "label" => "いいよ",
-                            "text" => "いいよ"
+                            "text"  => "いいよ"
                         ]
                     ],
                     [
-                        "type" => "action",
+                        "type"   => "action",
                         "action" => [
-                            "type" => "message",
+                            "type"  => "message",
                             "label" => "現在地を送信",
                             "text"  => "現在地近辺のお店を探す"
                         ],
                     ],
                     [
-                        "type" => "action",
+                        "type"   => "action",
                         "action" => [
-                            "type" => "postback",
+                            "type"  => "postback",
                             "label" => "次のお店を探す！",
-                            "data" => "lat={$lat}&lng={$lng}",
+                            "data"  => "lat={$lat}&lng={$lng}",
                             "displayText" => "次の店を探す",
                         ]
                     ]
@@ -154,6 +155,7 @@ class LineService
         ];
     }
 
+    // Restaurants Not Found
     public function NotFoundMessage(string $message = null): array
     {
         return [
@@ -503,7 +505,10 @@ class LineService
             'バカ',
             '馬鹿',
             'あほ',
-            'アホ'
+            'アホ',
+            'まぬけ',
+            '間抜け',
+            'マヌケ',
         ];
     }
 }
