@@ -59,6 +59,7 @@ class LineController extends Controller
                 //次候補
                 case $event instanceof \LINE\LINEBot\Event\PostbackEvent:
                     $data = $event->getPostbackData();
+                    error_log(print_r($data, true));
                     $latitude = $data["lat"];
                     $longitude = $data["lng"];
                     $restaurants = $this->hotpepperService->searchGourmet($latitude, $longitude);
@@ -104,8 +105,6 @@ class LineController extends Controller
             "to"         => $lineUserId,
             "messages"   => $response
         ];
-
-        error_log(print_r($response, true));
 
         $curl = curl_init( $uri );
         curl_setopt($curl, CURLOPT_POST, true);

@@ -127,9 +127,11 @@ class LineService
                         "type" => "action",
                         "action" => [
                             "type" => "message",
-                            "label" => "他のお店を探す",
+                            "label" => "現在地を送信",
                             "text"  => "他のお店を探す"
                         ],
+                    ],
+                    [
                         "type" => "action",
                         "action" => [
                             "type" => "postback",
@@ -137,7 +139,7 @@ class LineService
                             "data" => "lat={$lat}?lng={$lng}",
                             "displayText" => "位置情報を送信",
                         ]
-                    ],
+                    ]
                 ]
             ]
         ];
