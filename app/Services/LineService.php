@@ -58,11 +58,12 @@ class LineService
     public function FollowAction($event): array
     {
         $firstTime = $this->shopLog->doesNotExists($event->getUserId());
-        $message = $firstTime ? $this->messages['follow']['first'] : $this->messages['follow']['unblock'];
-        return [[
-            "type" => "text",
-            "text" => $message,
-        ]];
+
+        if ($firstTime) {
+            return $this->messageStampFormat($this->messages['follow']['first'], '11538', '51626502');
+        } else {
+            return $this->messageStampFormat($this->messages['follow']['unblock'], '1070', '17849');
+        }
     }
 
     /**
