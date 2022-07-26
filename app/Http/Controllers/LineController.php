@@ -58,6 +58,7 @@ class LineController extends Controller
 
                 //位置情報の受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\LocationMessage:
+                case $event instanceof \LINE\LINEBot\Event\PostbackEvent:
                     $restaurants = $this->hotpepperService->searchGourmet($event);
                     if (empty($restaurants)) {
                         $messageArray = $this->lineService->NotFoundMessage();
@@ -69,9 +70,7 @@ class LineController extends Controller
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\StickerMessage:
                     $messageArray = $this->lineService->StampAction($event);
                     break;
-
-                //選択肢とか選んだ時に受信するイベント
-                case $event instanceof \LINE\LINEBot\Event\PostbackEvent:
+                    break;
                 //ブロック
                 case $event instanceof \LINE\LINEBot\Event\UnfollowEvent:
                 default:

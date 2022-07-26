@@ -115,7 +115,7 @@ class LineService
         ];
     }
 
-    private function afterReplyMessage(): array
+    private function afterReplyMessage($lat, $lng): array
     {
 
         return [
@@ -129,8 +129,35 @@ class LineService
                             "type" => "message",
                             "label" => "他のお店を探す",
                             "text"  => "他のお店を探す"
+                        ],
+                        "type" => "action",
+                        "action" => [
+                            "type" => "postback",
+                            "label" => "location-test",
+                            "data" => "lat={$lat}?lng={$lng}",
+                            "displayText" => "位置情報を送信",
                         ]
                     ],
+                ]
+            ]
+        ];
+    }
+
+    private function postbackMessage(): array
+    {
+        return [
+            "type" => "text",
+            "text" => "わんもあ",
+            "quickReply" => [
+                "items" => [
+                    [
+                        "type" => "action",
+                        "action" => [
+                            "type" => "postback",
+                            "label" => "Buy",
+                            "data" => action,
+                        ]
+                    ]
                 ]
             ]
         ];
@@ -195,7 +222,7 @@ class LineService
             'contents' => $this->returnFlexJson($shop)
         ];
 
-        return [ $response, $this->afterReplyMessage() ];
+        return [ $response, $this->afterReplyMessage($event->getLatitude(), $evenet->getLongitude()) ];
     }
 
     // StampAction
