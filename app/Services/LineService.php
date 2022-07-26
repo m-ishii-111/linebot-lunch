@@ -189,19 +189,13 @@ class LineService
         $shop = $shops[array_rand($shops)];
         $this->shopLog->insertLog($lineUserId, $shop);
 
-        $postArray = [
+        $response = [
             'type'     => 'flex',
             'altText'  => $shop['name'],
             'contents' => $this->returnFlexJson($shop)
         ];
 
-        $result = json_encode([
-            'replyToken' => $replyToken,
-            'to'         => [ $lineUserId ],
-            'messages'   => [ $postArray ]
-        ]);
-
-        return [ $postArray, $this->afterReplyMessage() ];
+        return [ $response, $this->afterReplyMessage() ];
     }
 
     // StampAction

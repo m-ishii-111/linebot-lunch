@@ -63,7 +63,6 @@ class LineController extends Controller
                         $messageArray = $this->lineService->NotFoundMessage();
                     }
                     $messageArray = $this->lineService->LocationAction($event, $restaurants);
-                    // 次へボタンを送信する
                     break;
 
                 //スタンプの受信
@@ -82,7 +81,6 @@ class LineController extends Controller
                     break;
             }
             $this->sendMessage($replyToken, $lineUserId, $messageArray);
-            // $bot->replyMessage($replyToken, $messageBuilder);
         }
         return 'ok!';
     }
@@ -99,14 +97,14 @@ class LineController extends Controller
         error_log(print_r($response, true));
 
         $curl = curl_init( $uri );
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($post_data));
         curl_setopt($curl, CURLOPT_HTTPHEADER, [
             'Authorization: Bearer '.config('line.access_token'),
-            'Content-Type: application/json; charset=UTF-8']
-        );
+            'Content-Type: application/json; charset=UTF-8'
+        ]);
 
         $curlResult = curl_exec($curl);
         curl_close($curl);
