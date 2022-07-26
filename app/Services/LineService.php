@@ -27,14 +27,15 @@ class LineService
 
     public function __construct($accessToken, $channelSecret)
     {
-        $this->accessToken = $accessToken;
+        $this->accessToken   = $accessToken;
         $this->channelSecret = $channelSecret;
+
         $this->httpClient = new CurlHTTPClient($this->accessToken);
         $this->bot = new LINEBot($this->httpClient, ['channelSecret' => $this->channelSecret]);
 
         $messagesMst = new MessageMst();
         $this->messages = $messagesMst->getMessages();
-        $this->shopLog = new ShopLog();
+        $this->shopLog  = new ShopLog();
     }
 
     public function getBot()
@@ -63,9 +64,27 @@ class LineService
     public function MessageAction($event)
     {
         $text = $event->getText();
+        $timezone = timezone();
 
         if ($text == $this->messages['reply_select']['final_answer']) {
-            return $this->stampFormat('446', '1993');
+            $message = 'いってらっしゃーい！！';
+            switch ( $timezone ) {
+                case 'morning':
+                    return $this->messageStampFormat($message, '446', '1996');
+                    break;
+                case 'noon':
+                    return $this->messageStampFormat($message, '446', '1997');
+                    break;
+                case 'night':
+                    return $this->messageStampFormat($message, '446', '1992');
+                    break;
+                case 'midnight':
+                    return $this->messageStampFormat($message, '446', '2002');
+                    break;
+                default:
+                    return $this->messageStampFormat($message, '446', '1992');
+                    break;
+            }
         }
 
         if (in_array($text, $this->NGword())) {
@@ -76,25 +95,7 @@ class LineService
             return [ $this->replyMessage($this->messages['reply']['please']) ];
         }
 
-        switch ( timezone() ) {
-            case 'midnight':
-                $message = $this->messages['timezone']['midnight'];
-                break;
-            case 'morning':
-                $message = $this->messages['timezone']['morning'];
-                break;
-            case 'noon':
-                $message = $this->messages['timezone']['noon'];
-                break;
-            case 'night':
-                $message = $this->messages['timezone']['night'];
-                break;
-            default:
-                $message = "こんにちは！";
-                break;
-        }
-
-        return [ $this->replyMessage($message) ];
+        return [ $this->replyMessage($this->messages['timezone'][$timezone]) ];
     }
 
     private function replyMessage(string $message): array
@@ -227,6 +228,27 @@ class LineService
             'packageId' => $packageId,
             'stickerId' => $stickerId
         ]];
+    }
+
+    // メッセージとスタンプ両方送りたいとき
+    public function messageStampFormat(string $text, string $packageId, string $stickerId, bool $reverse = false)
+    {
+        $message = [
+            'type' => 'text',
+            'text' => $text
+        ];
+
+        $sticker = [
+            'type' => 'sticker',
+            'packageId' => $packageId,
+            'stickerId' => $stickerId
+        ];
+
+        if (!$reverse) {
+            return [ $message, $sticker ];
+        } else {
+            return [ $sticker, $message ];
+        }
     }
 
     // UnknownAction
