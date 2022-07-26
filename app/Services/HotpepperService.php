@@ -43,6 +43,10 @@ class HotpepperService
         $longitude = $event->getLongitude();
         $range = 2;
 
+        if (is_null($latitude) || is_null($longitude)) {
+            return [];
+        }
+
         $options = [
             'query' => [
                 'key'    => $this->apiKey,

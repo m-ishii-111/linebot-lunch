@@ -136,6 +136,14 @@ class LineService
         ];
     }
 
+    public function NotFoundMessage(string $message = null)
+    {
+        return [
+            "type" => "text",
+            "text" => $message ?? $this->messages['location'][9],
+        ];
+    }
+
     // LocationMessage
     public function LocationAction($event, $restaurants)
     {
@@ -144,7 +152,7 @@ class LineService
 
         if ($restaurants['results_returned'] < 1) {
             error_log('line_user_id: '.$lineUserId.', error: restaurants not found.');
-            $this->SendReplyMessage($replyToken, $this->messages['location'][9]);
+            return $this->NotFoundMessage();
         }
 
         $shops = $restaurants['shop'];
@@ -175,7 +183,7 @@ class LineService
 
         if (count($shops) < 1) {
             error_log('line_user_id: '.$lineUserId.', info: shops is empty.');
-            $this->SendReplyMessage($replyToken, $this->messages['location'][9]);
+            return $this->NotFoundMessage();
         }
 
         $shop = $shops[array_rand($shops)];
