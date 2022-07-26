@@ -133,31 +133,11 @@ class LineService
                         "type" => "action",
                         "action" => [
                             "type" => "postback",
-                            "label" => "location-test",
+                            "label" => "次のお店を探す！",
                             "data" => "lat={$lat}?lng={$lng}",
                             "displayText" => "位置情報を送信",
                         ]
                     ],
-                ]
-            ]
-        ];
-    }
-
-    private function postbackMessage(): array
-    {
-        return [
-            "type" => "text",
-            "text" => "わんもあ",
-            "quickReply" => [
-                "items" => [
-                    [
-                        "type" => "action",
-                        "action" => [
-                            "type" => "postback",
-                            "label" => "Buy",
-                            "data" => action,
-                        ]
-                    ]
                 ]
             ]
         ];
@@ -172,11 +152,8 @@ class LineService
     }
 
     // LocationMessage
-    public function LocationAction($event, $restaurants)
+    public function LocationAction($lineUserId, $restaurants, $latitude, $longitude)
     {
-        $replyToken = $event->getReplyToken();
-        $lineUserId = $event->getUserId();
-
         if ($restaurants['results_returned'] < 1) {
             error_log('line_user_id: '.$lineUserId.', error: restaurants not found.');
             return $this->NotFoundMessage();
@@ -222,7 +199,7 @@ class LineService
             'contents' => $this->returnFlexJson($shop)
         ];
 
-        return [ $response, $this->afterReplyMessage($event->getLatitude(), $event->getLongitude()) ];
+        return [ $response, $this->afterReplyMessage($latitude, $longitude) ];
     }
 
     // StampAction

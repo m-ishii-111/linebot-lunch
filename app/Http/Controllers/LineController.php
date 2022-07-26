@@ -56,14 +56,26 @@ class LineController extends Controller
                     Log::debug($messageArray);
                     break;
 
-                //位置情報の受信
-                case $event instanceof \LINE\LINEBot\Event\MessageEvent\LocationMessage:
+                //次候補
                 case $event instanceof \LINE\LINEBot\Event\PostbackEvent:
-                    $restaurants = $this->hotpepperService->searchGourmet($event);
+                    $data = $event->getPostbackData();
+                    $latitude = $data["lat"];
+                    $longitude = $data["lng"];
+                    $restaurants = $this->hotpepperService->searchGourmet($latitude, $longitude);
                     if (empty($restaurants)) {
                         $messageArray = $this->lineService->NotFoundMessage();
                     }
-                    $messageArray = $this->lineService->LocationAction($event, $restaurants);
+                    $messageArray = $this->lineService->LocationAction($lineUserId, $restaurants, $latitude, $longitude);
+                    break;
+                //位置情報の受信
+                case $event instanceof \LINE\LINEBot\Event\MessageEvent\LocationMessage:
+                    $latitude = $event->getLatitude();
+                    $longitude = $event->getLongitude();
+                    $restaurants = $this->hotpepperService->searchGourmet($latitude, $longitude);
+                    if (empty($restaurants)) {
+                        $messageArray = $this->lineService->NotFoundMessage();
+                    }
+                    $messageArray = $this->lineService->LocationAction($lineUserId, $restaurants, $latitude, $longitude);
                     break;
 
                 //スタンプの受信

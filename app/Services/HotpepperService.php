@@ -35,12 +35,10 @@ class HotpepperService
         return $genres;
     }
 
-    public function searchGourmet($event)
+    public function searchGourmet($latitude, $longitude)
     {
         $method = 'GET';
         $format = 'json';
-        $latitude  = $event->getLatitude();
-        $longitude = $event->getLongitude();
         $range = 2;
 
         if (is_null($latitude) || is_null($longitude)) {
