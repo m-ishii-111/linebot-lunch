@@ -92,7 +92,8 @@ class LineController extends Controller
                 default:
                     $message = 'その操作はサポートしてません。.[' . get_class($event) . '][' . $event->getType() . ']';
                     error_log('Unknown or Undifined event :'.get_class($event).' / '.$event->getType());
-                    $messageArray = $this->lineService->UnknownAction($event, $message);
+                    return 'ok';
+                    // $messageArray = $this->lineService->UnknownAction($event, $message);
                     break;
             }
             $this->sendMessage($replyToken, $lineUserId, $messageArray);
