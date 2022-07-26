@@ -78,19 +78,19 @@ class LineService
 
         switch ( timezone() ) {
             case 'midnight':
-                $message = "こんな夜遅くに店探すの...？\n\n";
+                $message = "こんな夜遅くに店探すの...？";
                 break;
             case 'morning':
-                $message = "おはよう！\nいい朝だね！\n";
+                $message = "おはよう！\nいい朝だね！";
                 break;
             case 'noon':
-                $message = "こんにちは！\nランチの時間だね！\n\n";
+                $message = "こんにちは！\nランチの時間だね！";
                 break;
             case 'night':
-                $message = "こんばんは！\n今日はどこで食べる？\n\n";
+                $message = "こんばんは！\n今日はどこで食べる？n";
                 break;
             default:
-                $message = "こんにちは！\n";
+                $message = "こんにちは！";
                 break;
         }
 
