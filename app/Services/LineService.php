@@ -58,7 +58,7 @@ class LineService
     public function FollowAction($event): array
     {
         $firstTime = $this->shopLog->doesNotExists($event->getUserId());
-        $message = $firstTime ? $this->messages['follow']['first'] : $this->message['follow']['unblock'];
+        $message = $firstTime ? $this->messages['follow']['first'] : $this->messages['follow']['unblock'];
         return [[
             "type" => "text",
             "text" => $message,
