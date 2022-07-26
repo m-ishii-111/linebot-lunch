@@ -222,7 +222,7 @@ class LineService
             'contents' => $this->returnFlexJson($shop)
         ];
 
-        return [ $response, $this->afterReplyMessage($event->getLatitude(), $evenet->getLongitude()) ];
+        return [ $response, $this->afterReplyMessage($event->getLatitude(), $event->getLongitude()) ];
     }
 
     // StampAction
