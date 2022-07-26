@@ -39,10 +39,9 @@ class ShopLog extends Model
         ]);
     }
 
-    public function isExists(string $lineUserId): bool
+    public function doesNotExists(string $lineUserId): bool
     {
-        $query = DB::table('shop_logs')->where('line_user_id', $lineUserId);
-        error_log($query->toSql());
-        return $query->exists();
+        $query = DB::table('shop_logs')->where('line_user_id', $lineUserId)->get()->count();
+        return $query < 1;
     }
 }

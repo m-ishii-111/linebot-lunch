@@ -51,7 +51,7 @@ class LineService
     // 友達追加とブロック解除
     public function FollowAction($event)
     {
-        $firstTime = !$this->shopLog->isExists($event->getUserId());
+        $firstTime = $this->shopLog->doesNotExists($event->getUserId());
         error_log($firstTime);
         $message = $firstTime ? $this->messages['follow'][0] : "やっと...\n解除してくれたね...?";
         return [[
