@@ -98,7 +98,7 @@ class LineService
         }
 
         if (in_array($text, $this->NGword())) {
-            return $this->stampFormat('11538', '51626519');
+            return [ $this->stampFormat('11538', '51626519') ];
         }
 
         if ($text == $this->messages['reply']['search']) {
@@ -276,11 +276,11 @@ class LineService
     // スタンプ単体で送りたいとき
     private function stampFormat($packageId, $stickerId)
     {
-        return [[
+        return [
             'type' => 'sticker',
             'packageId' => $packageId,
             'stickerId' => $stickerId
-        ]];
+        ];
     }
 
     // メッセージとスタンプ両方送りたいとき
@@ -291,11 +291,7 @@ class LineService
             'text' => $text
         ];
 
-        $sticker = [
-            'type' => 'sticker',
-            'packageId' => $packageId,
-            'stickerId' => $stickerId
-        ];
+        $sticker = $this->stampFormat($packageId, $stickerId);
 
         if (!$reverse) {
             return [ $message, $sticker ];

@@ -144,7 +144,7 @@ class LineController extends Controller
      */
      private function unknown($event): array
      {
-        $message = 'その操作はサポートしてません。.[' . get_class($event) . '][' . $event->getType() . ']';
+        $message = 'その操作はサポートしてませんよ';
         error_log('Unknown or Undifined event :'.get_class($event).' / '.$event->getType());
 
         return $this->lineService->UnknownAction($message);
