@@ -30,14 +30,13 @@ class MessageMst extends Model
     public function upsertMessage($input)
     {
         unset($input['_token']);
+        $data = [];
         $userId = Auth::id();
-        $data = [
-            ['type' => 'follow',   'seq' => 0, 'message' => $input['follow'],          'user_id' => $userId],
-            ['type' => 'location', 'seq' => 0, 'message' => $input['location'],        'user_id' => $userId],
-            ['type' => 'location', 'seq' => 1, 'message' => $input['location_button'], 'user_id' => $userId],
-            ['type' => 'location', 'seq' => 9, 'message' => $input['not_found'],       'user_id' => $userId],
-            ['type' => 'stamp',    'seq' => 0, 'message' => $input['stamp'],           'user_id' => $userId],
-        ];
+        foreach($input as $field => $value) {
+            $fields = explode('-', $field);
+            $data[] = ['type' => $fields[0], 'seq' => $fields[1], 'message' => $value, 'user_id' => $userId];
+        }
+
         $this->upsert($data, ['type', 'seq'], ['message', 'user_id']);
     }
 }

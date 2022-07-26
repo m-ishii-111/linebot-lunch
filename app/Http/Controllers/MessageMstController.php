@@ -18,13 +18,7 @@ class MessageMstController extends Controller
     public function index()
     {
         $messages = $this->messageMst->getMessages();
-        return view('edit', [
-            'follow' => $messages['follow'][0] ?? '',
-            'location' => $messages['location'][0] ?? '',
-            'location_button' => $messages['location'][1] ?? '',
-            'stamp' => $messages['stamp'][0] ?? '',
-            'not_found' => $messages['location'][9] ?? '',
-        ]);
+        return view('edit', compact('messages'));
     }
 
     public function store(MessageMstPostRequest $request)

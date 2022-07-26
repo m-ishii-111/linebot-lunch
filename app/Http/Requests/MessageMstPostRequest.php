@@ -24,11 +24,7 @@ class MessageMstPostRequest extends FormRequest
     public function rules()
     {
         return [
-            'follow'          => 'required|string|max:255',
-            'location'        => 'required|string|max:255',
-            'location_button' => 'required|string|max:255',
-            'stamp'           => 'required|string|max:255',
-            'not_found'       => 'required|string|max:255',
+            '*'          => 'required|string|max:255',
         ];
     }
 

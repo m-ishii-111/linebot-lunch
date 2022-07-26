@@ -1,11 +1,3 @@
-<?php
-    $follow = $errors->has('follow') ? old('follow') : $follow;
-    $location = $errors->has('location') ? old('location') : $location;
-    $location_button = $errors->has('location_button') ? old('location_button') : $location_button;
-    $stamp = $errors->has('stamp') ? old('stamp') : $stamp;
-    $not_found = $errors->has('not_found') ? old('not_found') : $not_found;
-?>
-
 @extends('layouts.app')
 
 @section('content')
@@ -21,79 +13,35 @@
                             {{ session('flash_message') }}
                         </div>
                     @endif
+                    @if ($errors->any())
+                        <div class="alert alert-danger" role="alert">
+                            {{ __('登録に失敗しました。') }}
+                        </div>
+                    @endif
 
                     <form method="POST" action="{{ route('store') }}">
                         @csrf
+                        @foreach($messages as $type => $data)
+                            @foreach($data as $seq => $text)
+                                <?php
+                                    $name = $type . '-' . $seq;
+                                    $value = $errors->has($name) ? old($name) : $text;
+                                ?>
+                                <div class="row mb-3">
+                                    <label for="{{ __($name) }}" class="col-md-4 col-form-label text-md-end">{{ __($name) }}</label>
 
-                        <div class="row mb-3">
-                            <label for="follow" class="col-md-4 col-form-label text-md-end">{{ __('友達追加＆ブロック解除時') }}</label>
+                                    <div class="col-md-6">
+                                        <textarea class="form-control @error($name) is-invalid @enderror" name="{{ __($name) }}" rows="3" required autofocus>{{ $value }}</textarea>
 
-                            <div class="col-md-6">
-                                <textarea class="form-control @error('follow') is-invalid @enderror" name="follow" rows="3" required autofocus>{{ $follow }}</textarea>
-
-                                @error('follow')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="location" class="col-md-4 col-form-label text-md-end">{{ __('位置情報送信依頼') }}</label>
-
-                            <div class="col-md-6">
-                                <textarea class="form-control @error('location') is-invalid @enderror" name="location" rows="3" required autofocus>{{ $location }}</textarea>
-
-                                @error('location')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="location_button" class="col-md-4 col-form-label text-md-end">{{ __('位置情報送信ボタン') }}</label>
-
-                            <div class="col-md-6">
-                                <textarea class="form-control @error('location_button') is-invalid @enderror" name="location_button" rows="3" required autofocus>{{ $location_button }}</textarea>
-
-                                @error('location_button')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="stamp" class="col-md-4 col-form-label text-md-end">{{ __('スタンプ受信時') }}</label>
-
-                            <div class="col-md-6">
-                                <textarea class="form-control @error('stamp') is-invalid @enderror" name="stamp" rows="3" required autofocus>{{ $stamp }}</textarea>
-
-                                @error('stamp')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="not_found" class="col-md-4 col-form-label text-md-end">{{ __('情報が見つからない時') }}</label>
-
-                            <div class="col-md-6">
-                                <textarea class="form-control @error('not_found') is-invalid @enderror" name="not_found" rows="3" required autofocus>{{ $not_found }}</textarea>
-
-                                @error('not_found')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+                                        @error($name)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endforeach
 
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
