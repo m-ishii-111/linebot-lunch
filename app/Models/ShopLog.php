@@ -41,7 +41,7 @@ class ShopLog extends Model
 
     public function isExists(string $lineUserId): bool
     {
-        $query = $this->where('line_user_id', $lineUserId);
+        $query = DB::table('shop_logs')->where('line_user_id', $lineUserId);
         error_log($query->toSql());
         return $query->exists();
     }
