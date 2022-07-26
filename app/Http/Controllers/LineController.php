@@ -75,7 +75,7 @@ class LineController extends Controller
                     break;
 
                 default:
-                    if (!is_null($replyToken)) return 'ok';
+                    if (is_null($replyToken)) return 'ok';
                     $messageArray = $this->unknown($event);
                     break;
             }
