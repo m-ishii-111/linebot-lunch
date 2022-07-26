@@ -59,20 +59,17 @@ class LineController extends Controller
                 //次候補
                 case $event instanceof \LINE\LINEBot\Event\PostbackEvent:
                     $query = $event->getPostbackData();
-                    error_log($query);
                     if (!$query) {
                         $messageArray = $this->lineService->NotFoundMessage();
                         break;
                     }
                     parse_str($query, $data);
-                    $latitude = $data["lat"];
-                    $longitude = $data["lng"];
-                    $restaurants = $this->hotpepperService->searchGourmet($latitude, $longitude);
+                    $restaurants = $this->hotpepperService->searchGourmet($data["lat"], $data["lng"]);
                     if (empty($restaurants)) {
                         $messageArray = $this->lineService->NotFoundMessage();
                         break;
                     }
-                    $messageArray = $this->lineService->LocationAction($lineUserId, $restaurants, $latitude, $longitude);
+                    $messageArray = $this->lineService->LocationAction($lineUserId, $restaurants, $data["lat"], $data["lng"]);
                     break;
                 //位置情報の受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\LocationMessage:

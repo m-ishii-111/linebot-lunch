@@ -136,7 +136,7 @@ class LineService
                         "action" => [
                             "type" => "postback",
                             "label" => "次のお店を探す！",
-                            "data" => "lat={$lat}?lng={$lng}",
+                            "data" => "lat={$lat}&lng={$lng}",
                             "displayText" => "位置情報を送信",
                         ]
                     ]
