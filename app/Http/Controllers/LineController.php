@@ -166,7 +166,7 @@ class LineController extends Controller
      *
      * @return array
      */
-    private function sendLocationAction($lineUserId, $latitude, $longiture): array
+    private function sendLocationAction($lineUserId, $latitude, $longitude): array
     {
         $restaurants = $this->hotpepperService->searchGourmet($latitude, $longitude);
         if (empty($restaurants)) {
