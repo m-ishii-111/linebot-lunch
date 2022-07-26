@@ -29,7 +29,7 @@ class LineController extends Controller
     /**
      * 実質的なRouter
      */
-    public function webhook(Request $request)
+    public function webhook(Request $request): string
     {
         // 署名検証
         $signature = $request->header(config('line.header_signature'));
@@ -74,13 +74,8 @@ class LineController extends Controller
                     $messageArray = $this->sticker($event);
                     break;
 
-                //ブロック
-                case $event instanceof \LINE\LINEBot\Event\UnfollowEvent:
                 default:
-                    $message = 'その操作はサポートしてません。.[' . get_class($event) . '][' . $event->getType() . ']';
-                    error_log('Unknown or Undifined event :'.get_class($event).' / '.$event->getType());
-                    return 'ok';
-                    // $messageArray = $this->lineService->UnknownAction($event, $message);
+                    $messageArray = $this->unknown($event);
                     break;
             }
             $this->sendMessage($replyToken, $lineUserId, $messageArray);
@@ -143,6 +138,19 @@ class LineController extends Controller
     }
 
     /**
+     * Unknown Controller
+     *
+     * @param event
+     */
+     private function unknown($event): array
+     {
+        $message = 'その操作はサポートしてません。.[' . get_class($event) . '][' . $event->getType() . ']';
+        error_log('Unknown or Undifined event :'.get_class($event).' / '.$event->getType());
+
+        return $this->lineService->UnknownAction($message);
+     }
+
+    /**
      * Location Controller
      *
      * @param \LINE\LINEBot\Event\MessageEvent\LocationMessage
@@ -182,8 +190,9 @@ class LineController extends Controller
      * @param string $replyToken
      * @param string $lineUserId
      * @param array  $response
+     * @return void
      */
-    private function sendMessage(string $replyToken, string $lineUserId, array $response)
+    private function sendMessage(string $replyToken, string $lineUserId, array $response): void
     {
         $uri = config('line.curl_uri');
         $post_data = [

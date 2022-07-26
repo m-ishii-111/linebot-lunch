@@ -49,8 +49,13 @@ class LineService
         return $this->bot->replyMessage($replyToken, $textMessageBuilder);
     }
 
-    // 友達追加とブロック解除
-    public function FollowAction($event)
+    /**
+     * Follow Action
+     *
+     * @param event
+     * @return array
+     */
+    public function FollowAction($event): array
     {
         $firstTime = $this->shopLog->doesNotExists($event->getUserId());
         $message = $firstTime ? $this->messages['follow']['first'] : $this->message['follow']['unblock'];
@@ -60,8 +65,13 @@ class LineService
         ]];
     }
 
-    // TextMessage
-    public function MessageAction($event)
+    /**
+     * Message Action
+     *
+     * @param $event
+     * @return array
+     */
+    public function MessageAction($event): array
     {
         $text = $event->getText();
         $timezone = timezone();
@@ -98,73 +108,40 @@ class LineService
         return [ $this->replyMessage($this->messages['timezone'][$timezone]) ];
     }
 
-    private function replyMessage(string $message): array
+    /**
+     * Unknown Action
+     *
+     * @param string $message
+     * @return array
+     */
+    public function UnknownAction(string $message): array
     {
-        return [
-            "type" => "text",
-            "text" => $message,
-            "quickReply" => [
-                "items"  => [
-                    [
-                        "type"   => "action",
-                        "action" => [
-                            "type"  => "location",
-                            "label" => $this->messages['reply']['search']
-                        ]
-                    ],
-                ]
-            ]
-        ];
+        return $this->messageStampFormat($message, '11538', '51626506');
     }
 
-    private function afterReplyMessage(string $shopId, string $lat, string $lng): array
+    /**
+     * Stamp Action
+     *
+     * @param event
+     * @return array
+     */
+    public function StampAction($event)
     {
-        $query = "&shop_id={$shopId}&lat={$lat}&lng={$lng}";
-        return [
-            "type" => "text",
-            "text" => $this->messages['reply']['after_suggest'],
-            "quickReply" => [
-                "items"  => [
-                    [
-                        "type"   => "action",
-                        "action" => [
-                            "type"  => "message",
-                            "label" => $this->messages['reply_select']['final_answer'],
-                            "text"  => $this->messages['reply_select']['final_answer']
-                        ]
-                    ],
-                    [
-                        "type"   => "action",
-                        "action" => [
-                            "type"  => "postback",
-                            "label" => $this->messages['reply_select']['next_shop'],
-                            "data"  => "type=search" . $query,
-                            "displayText" => $this->messages['reply_select']['next_shop'],
-                        ]
-                    ]
-                ]
-            ]
-        ];
+        // GoodJobStampを送信
+        return $this->stampFormat('11537', '52002735');
     }
 
-    // Restaurants Not Found
-    public function NotFoundMessage(string $message = null): array
-    {
-        return [
-            [
-                "type" => "text",
-                "text" => $message ?? $this->messages['location']['not_found'],
-            ],
-            [
-                "type" => "sticker",
-                "packageId" => '6136',
-                "stickerId" => '10551392'
-            ]
-        ];
-    }
-
-    // LocationMessage
-    public function LocationAction($lineUserId, $restaurants, $latitude, $longitude)
+    /**
+     * Location Action
+     *
+     * @param string $lineUserId
+     * @param array $restaurants
+     * @param string $latitude
+     * @param string $longitude
+     *
+     * @return array
+     */
+    public function LocationAction(string $lineUserId, array $restaurants, string $latitude, string $longitude): array
     {
         if ($restaurants['results_returned'] < 1) {
             error_log('line_user_id: '.$lineUserId.', error: restaurants not found.');
@@ -214,14 +191,90 @@ class LineService
         return [ $response, $this->afterReplyMessage($shop['id'], $latitude, $longitude) ];
     }
 
-    // StampAction
-    public function StampAction($event)
+    // ~~~~~~~~ 以下 JsonFormat Array ~~~~~~~~
+
+    /**
+     * Quick Reply
+     *
+     * @param string $message
+     * @return array
+     */
+    private function replyMessage(string $message): array
     {
-        // GoodJobStampを送信
-        return $this->stampFormat('11537', '52002735');
+        return [
+            "type" => "text",
+            "text" => $message,
+            "quickReply" => [
+                "items"  => [
+                    [
+                        "type"   => "action",
+                        "action" => [
+                            "type"  => "location",
+                            "label" => $this->messages['reply']['search']
+                        ]
+                    ],
+                ]
+            ]
+        ];
     }
 
-    public function stampFormat($packageId, $stickerId)
+    /**
+     * Reply Message After Location FlexMessage
+     *
+     * @param string $shopId
+     * @param string $lat
+     * @param string $lng
+     *
+     * @return array
+     */
+    private function afterReplyMessage(string $shopId, string $lat, string $lng): array
+    {
+        $query = "&shop_id={$shopId}&lat={$lat}&lng={$lng}";
+        return [
+            "type" => "text",
+            "text" => $this->messages['reply']['after_suggest'],
+            "quickReply" => [
+                "items"  => [
+                    [
+                        "type"   => "action",
+                        "action" => [
+                            "type"  => "message",
+                            "label" => $this->messages['reply_select']['final_answer'],
+                            "text"  => $this->messages['reply_select']['final_answer']
+                        ]
+                    ],
+                    [
+                        "type"   => "action",
+                        "action" => [
+                            "type"  => "postback",
+                            "label" => $this->messages['reply_select']['next_shop'],
+                            "data"  => "type=search" . $query,
+                            "displayText" => $this->messages['reply_select']['next_shop'],
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    // Restaurants Not Found
+    public function NotFoundMessage(string $message = null): array
+    {
+        return [
+            [
+                "type" => "text",
+                "text" => $message ?? $this->messages['location']['not_found'],
+            ],
+            [
+                "type" => "sticker",
+                "packageId" => '6136',
+                "stickerId" => '10551392'
+            ]
+        ];
+    }
+
+    // スタンプ単体で送りたいとき
+    private function stampFormat($packageId, $stickerId)
     {
         return [[
             'type' => 'sticker',
@@ -231,7 +284,7 @@ class LineService
     }
 
     // メッセージとスタンプ両方送りたいとき
-    public function messageStampFormat(string $text, string $packageId, string $stickerId, bool $reverse = false)
+    private function messageStampFormat(string $text, string $packageId, string $stickerId, bool $reverse = false)
     {
         $message = [
             'type' => 'text',
@@ -251,17 +304,13 @@ class LineService
         }
     }
 
-    // UnknownAction
-    public function UnknownAction($event, $message)
-    {
-        return [
-            "type" => "text",
-            "text" => "その操作はサポートされていません。"
-        ];
-    }
-
-    // flexMessage Template
-    public function returnFlexJson($shop)
+    /**
+     * FlexMessage Format Json Array
+     *
+     * @param array $shop
+     * @return array
+     */
+    public function returnFlexJson($shop): array
     {
         $thumbnail    = $shop['photo']['mobile']['l'] ?? config('line.noimage');
         $shopUrl      = $shop['urls']['sp'] ?? $shop['urls']['pc'];
@@ -511,7 +560,12 @@ class LineService
         return $content;
     }
 
-    public function NGword()
+    /**
+     * NGワード集
+     *
+     * @return array
+     */
+    public function NGword(): array
     {
         return [
             'ばか',
