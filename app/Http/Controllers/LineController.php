@@ -78,6 +78,7 @@ class LineController extends Controller
                     $restaurants = $this->hotpepperService->searchGourmet($latitude, $longitude);
                     if (empty($restaurants)) {
                         $messageArray = $this->lineService->NotFoundMessage();
+                        break;
                     }
                     $messageArray = $this->lineService->LocationAction($lineUserId, $restaurants, $latitude, $longitude);
                     break;
