@@ -53,10 +53,10 @@ class LineService
     {
         $firstTime = !$this->shopLog->isExists($event->getUserId());
         $message = $firstTime ? $this->messages['follow'][0] : "やっと...\n解除してくれたね...?";
-        return [
+        return [[
             "type" => "text",
             "text" => $this->messages['follow'][0],
-        ];
+        ]];
     }
 
     // TextMessage
