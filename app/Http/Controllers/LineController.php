@@ -10,6 +10,7 @@ use LINE\LINEBot\SignatureValidator;
 use LINE\LINEBot\Event\FollowEvent;
 use LINE\LINEBot\Event\MessageEvent\TextMessage;
 use LINE\LINEBot\Event\MessageEvent\LocationMessage;
+use LINE\LINEBot\Event\MessageEvent\StickerMessage;
 use LINE\LINEBot\Event\PostbackEvent;
 use LINE\LINEBot\Event\UnfollowEvent;
 use Log;
@@ -25,6 +26,9 @@ class LineController extends Controller
         $this->hotpepperService = $hotpepperService;
     }
 
+    /**
+     * 実質的なRouter
+     */
     public function webhook(Request $request)
     {
         // 署名検証
@@ -47,44 +51,27 @@ class LineController extends Controller
             switch (true) {
                 //友達登録＆ブロック解除
                 case $event instanceof \LINE\LINEBot\Event\FollowEvent:
-                    $messageArray = $this->lineService->followAction($event);
+                    $messageArray = $this->follow($event);
                     break;
 
                 //メッセージの受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage:
-                    $messageArray = $this->lineService->MessageAction($event);
+                    $messageArray = $this->message($event);
                     break;
 
-                //次候補
+                //ポストバックイベントの受信
                 case $event instanceof \LINE\LINEBot\Event\PostbackEvent:
-                    $query = $event->getPostbackData();
-                    if (!$query) {
-                        $messageArray = $this->lineService->NotFoundMessage();
-                        break;
-                    }
-                    parse_str($query, $data);
-                    $restaurants = $this->hotpepperService->searchGourmet($data["lat"], $data["lng"]);
-                    if (empty($restaurants)) {
-                        $messageArray = $this->lineService->NotFoundMessage();
-                        break;
-                    }
-                    $messageArray = $this->lineService->LocationAction($lineUserId, $restaurants, $data["lat"], $data["lng"]);
+                    $messageArray = $this->postback($event);
                     break;
+
                 //位置情報の受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\LocationMessage:
-                    $latitude = $event->getLatitude();
-                    $longitude = $event->getLongitude();
-                    $restaurants = $this->hotpepperService->searchGourmet($latitude, $longitude);
-                    if (empty($restaurants)) {
-                        $messageArray = $this->lineService->NotFoundMessage();
-                        break;
-                    }
-                    $messageArray = $this->lineService->LocationAction($lineUserId, $restaurants, $latitude, $longitude);
+                    $messageArray = $this->location($event);
                     break;
 
                 //スタンプの受信
                 case $event instanceof \LINE\LINEBot\Event\MessageEvent\StickerMessage:
-                    $messageArray = $this->lineService->StampAction($event);
+                    $messageArray = $this->sticker($event);
                     break;
 
                 //ブロック
@@ -101,6 +88,101 @@ class LineController extends Controller
         return 'ok!';
     }
 
+    /**
+     * Follow Controller
+     *
+     * @param \LINE\LINEBot\Event\FollowEvent
+     * @return array
+     */
+    private function follow($event): array
+    {
+        return $this->lineService->followAction($event);
+    }
+
+    /**
+     * Message Controller
+     *
+     * @param \LINE\LINEBot\Event\MessageEvent\TextMessage
+     * @return array
+     */
+    private function message($event): array
+    {
+        return $this->lineService->MessageAction($event);
+    }
+
+    /**
+     * Stamp Controller
+     *
+     * @param \LINE\LINEBot\Event\MessageEvent\StickerMessage
+     * @return array
+     */
+    private function sticker($evnt): array
+    {
+        return $this->lineService->StampAction($event);
+    }
+
+    /**
+     * Postback Controller
+     *
+     * @param \LINE\LINEBot\Event\PostbackEvent
+     * @return array
+     */
+    private function postback($event): array
+    {
+        $query = $event->getPostbackData();
+        if (!$query) {
+            return $this->lineService->NotFoundMessage();
+        }
+        parse_str($query, $data);
+
+        return $this->sendLocationAction(
+            $event->getUserId(),
+            $data['lat'],
+            $data['lng']
+        );
+    }
+
+    /**
+     * Location Controller
+     *
+     * @param \LINE\LINEBot\Event\MessageEvent\LocationMessage
+     * @return array
+     */
+    private function location($event): array
+    {
+        return $this->sendLocationAction(
+            $event->getUserId(),
+            $event->getLatitude(),
+            $event->getLongitude()
+        );
+    }
+
+    /**
+     * Common Location Logic
+     *
+     * @param string $lineUserId
+     * @param string $latitude
+     * @param string $longitude
+     *
+     * @return array
+     */
+    private function sendLocationAction($lineUserId, $latitude, $longiture): array
+    {
+        $restaurants = $this->hotpepperService->searchGourmet($latitude, $longitude);
+        if (empty($restaurants)) {
+            return $this->lineService->NotFoundMessage();
+        }
+
+        return $this->lineService->LocationAction($lineUserId, $restaurants, $latitude, $longitude);
+    }
+
+    /**
+     * Return LINEBot Messaging API
+     *
+     * @param string $replyToken
+     * @param string $lineUserId
+     * @param array  $response
+     */
     private function sendMessage(string $replyToken, string $lineUserId, array $response)
     {
         $uri = config('line.curl_uri');

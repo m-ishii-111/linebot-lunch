@@ -15,8 +15,8 @@ class CreateMessageMstTable extends Migration
     {
         Schema::create('message_msts', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->default('サンプルテキスト');
-            $table->integer('seq')->unsigned()->default(0);
+            $table->string('type')->default('サンプルタイプ');
+            $table->string('seq')->default('サンプルシーケンス');
             $table->string('message');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();

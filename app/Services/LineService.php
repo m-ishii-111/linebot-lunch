@@ -52,11 +52,10 @@ class LineService
     public function FollowAction($event)
     {
         $firstTime = $this->shopLog->doesNotExists($event->getUserId());
-        error_log($firstTime);
-        $message = $firstTime ? $this->messages['follow'][0] : "やっと...\n解除してくれたね...?";
+        $message = $firstTime ? $this->messages['follow']['first'] : $this->message['follow']['unblock'];
         return [[
             "type" => "text",
-            "text" => $this->messages['follow'][0],
+            "text" => $message,
         ]];
     }
 
@@ -65,7 +64,7 @@ class LineService
     {
         $text = $event->getText();
 
-        if ($text == 'いいよ') {
+        if ($text == $this->messages['reply_select']['final_answer']) {
             return $this->stampFormat('446', '1993');
         }
 
@@ -73,22 +72,22 @@ class LineService
             return $this->stampFormat('11538', '51626519');
         }
 
-        if ($text == '他のお店を探す') {
-            return [ $this->replyMessage('もう一回送って') ];
+        if ($text == $this->messages['reply']['search']) {
+            return [ $this->replyMessage($this->messages['reply']['please']) ];
         }
 
         switch ( timezone() ) {
             case 'midnight':
-                $message = "こんな夜遅くに店探すの...？";
+                $message = $this->messages['timezone']['midnight'];
                 break;
             case 'morning':
-                $message = "おはよう！\nいい朝だね！";
+                $message = $this->messages['timezone']['morning'];
                 break;
             case 'noon':
-                $message = "こんにちは！\nランチの時間だね！";
+                $message = $this->messages['timezone']['noon'];
                 break;
             case 'night':
-                $message = "こんばんは！\n今日はどこで食べる？n";
+                $message = $this->messages['timezone']['night'];
                 break;
             default:
                 $message = "こんにちは！";
@@ -109,7 +108,7 @@ class LineService
                         "type"   => "action",
                         "action" => [
                             "type"  => "location",
-                            "label" => "お店を探す！"
+                            "label" => $this->messages['reply']['search']
                         ]
                     ],
                 ]
@@ -117,37 +116,29 @@ class LineService
         ];
     }
 
-    private function afterReplyMessage($lat, $lng): array
+    private function afterReplyMessage(string $shopId, string $lat, string $lng): array
     {
-
+        $query = "&shop_id={$shopId}&lat={$lat}&lng={$lng}";
         return [
             "type" => "text",
-            "text" => "ここでいい？",
+            "text" => $this->messages['reply']['after_suggest'],
             "quickReply" => [
                 "items"  => [
                     [
                         "type"   => "action",
                         "action" => [
                             "type"  => "message",
-                            "label" => "いいよ",
-                            "text"  => "いいよ"
+                            "label" => $this->messages['reply_select']['final_answer'],
+                            "text"  => $this->messages['reply_select']['final_answer']
                         ]
                     ],
                     [
                         "type"   => "action",
                         "action" => [
-                            "type"  => "message",
-                            "label" => "現在地を送信",
-                            "text"  => "現在地近辺のお店を探す"
-                        ],
-                    ],
-                    [
-                        "type"   => "action",
-                        "action" => [
                             "type"  => "postback",
-                            "label" => "次のお店を探す！",
-                            "data"  => "lat={$lat}&lng={$lng}",
-                            "displayText" => "次の店を探す",
+                            "label" => $this->messages['reply_select']['next_shop'],
+                            "data"  => "type=search" . $query,
+                            "displayText" => $this->messages['reply_select']['next_shop'],
                         ]
                     ]
                 ]
@@ -161,7 +152,7 @@ class LineService
         return [
             [
                 "type" => "text",
-                "text" => $message ?? $this->messages['location'][9],
+                "text" => $message ?? $this->messages['location']['not_found'],
             ],
             [
                 "type" => "sticker",
@@ -219,7 +210,7 @@ class LineService
             'contents' => $this->returnFlexJson($shop)
         ];
 
-        return [ $response, $this->afterReplyMessage($latitude, $longitude) ];
+        return [ $response, $this->afterReplyMessage($shop['id'], $latitude, $longitude) ];
     }
 
     // StampAction
