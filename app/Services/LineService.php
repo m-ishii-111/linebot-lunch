@@ -69,7 +69,7 @@ class LineService
         }
 
         if (in_array($text, $this->NGword())) {
-            return $this->stampFormat('6136', '10551382');
+            return $this->stampFormat('11538', '51626519');
         }
 
         if ($text == '他のお店を探す') {
@@ -137,7 +137,7 @@ class LineService
                         "action" => [
                             "type" => "message",
                             "label" => "現在地を送信",
-                            "text"  => "他のお店を探す"
+                            "text"  => "現在地近辺のお店を探す"
                         ],
                     ],
                     [
@@ -146,7 +146,7 @@ class LineService
                             "type" => "postback",
                             "label" => "次のお店を探す！",
                             "data" => "lat={$lat}&lng={$lng}",
-                            "displayText" => "位置情報を送信",
+                            "displayText" => "次の店を探す",
                         ]
                     ]
                 ]
@@ -154,7 +154,7 @@ class LineService
         ];
     }
 
-    public function NotFoundMessage(string $message = null)
+    public function NotFoundMessage(string $message = null): array
     {
         return [
             [
@@ -164,7 +164,7 @@ class LineService
             [
                 "type" => "sticker",
                 "packageId" => '6136',
-                "stickerId" => '51626501'
+                "stickerId" => '10551392'
             ]
         ];
     }
@@ -224,7 +224,7 @@ class LineService
     public function StampAction($event)
     {
         // GoodJobStampを送信
-        return $this->stampFormat('11538', '51626501');
+        return $this->stampFormat('11537', '52002735');
     }
 
     public function stampFormat($packageId, $stickerId)
