@@ -41,7 +41,10 @@ class ShopLog extends Model
 
     public function doesNotExists(string $lineUserId): bool
     {
-        $query = DB::table('shop_logs')->where('line_user_id', $lineUserId)->get()->count();
-        return $query < 1;
+        $query = DB::table('shop_logs')->where('line_user_id', $lineUserId);
+        error_log($query->toSql());
+        error_log($lineUserId);
+        $count = $query->get()->count();
+        return $count < 1;
     }
 }
