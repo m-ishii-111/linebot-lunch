@@ -201,7 +201,7 @@ class LineService
             'messages'   => [ $postArray ]
         ]);
 
-        return [ $result, $this->afterReplyMessage() ];
+        return [ $postArray, $this->afterReplyMessage() ];
     }
 
     // StampAction
@@ -209,7 +209,7 @@ class LineService
     {
         // GoodJobStampを送信
         // return new StickerMessageBuilder('11538', '51626501');
-        return $this->stampJson();
+        return [ $this->stampJson() ];
     }
 
     public function stampJson()
