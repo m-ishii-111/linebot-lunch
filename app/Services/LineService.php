@@ -138,10 +138,10 @@ class LineService
 
     public function NotFoundMessage(string $message = null)
     {
-        return [
+        return [[
             "type" => "text",
             "text" => $message ?? $this->messages['location'][9],
-        ];
+        ]];
     }
 
     // LocationMessage
