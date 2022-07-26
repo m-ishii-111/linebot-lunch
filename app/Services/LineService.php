@@ -63,6 +63,19 @@ class LineService
     public function MessageAction($event)
     {
         $text = $event->getText();
+
+        if ($text == 'いいよ') {
+            return $this->stampFormat('446', '1993');
+        }
+
+        if (in_array($text, $this->NGword())) {
+            return $this->stampFormat('6136', '10551382');
+        }
+
+        if ($text == '他のお店を探す') {
+            return [ $this->replyMessage('もう一回送って') ];
+        }
+
         switch ( timezone() ) {
             case 'midnight':
                 $message = "こんな夜遅くに店探すの...？\n\n";
@@ -81,19 +94,7 @@ class LineService
                 break;
         }
 
-        if ($text == '他のお店を探す') {
-            return [ $this->replyMessage('もう一回送って') ];
-        }
-        return [ $this->replyMessage("こんにちは！\nなにする？") ];
-    }
-
-    // 現在地送るボタン
-    public function requireLocation($event, $word)
-    {
-        $uri = new UriTemplateActionBuilder($this->messages['location'][1], 'line://nv/location');
-        $message = new ButtonTemplateBuilder(null, $word.$this->messages['location'][0], null, [$uri]);
-        $templateMessageBuilder = new TemplateMessageBuilder('位置情報を送ってね', $message);
-        return $templateMessageBuilder;
+        return [ $this->replyMessage($message) ];
     }
 
     private function replyMessage(string $message): array
@@ -127,6 +128,14 @@ class LineService
                         "type" => "action",
                         "action" => [
                             "type" => "message",
+                            "label" => "いいよ",
+                            "text" => "いいよ"
+                        ]
+                    ],
+                    [
+                        "type" => "action",
+                        "action" => [
+                            "type" => "message",
                             "label" => "現在地を送信",
                             "text"  => "他のお店を探す"
                         ],
@@ -147,10 +156,17 @@ class LineService
 
     public function NotFoundMessage(string $message = null)
     {
-        return [[
-            "type" => "text",
-            "text" => $message ?? $this->messages['location'][9],
-        ]];
+        return [
+            [
+                "type" => "text",
+                "text" => $message ?? $this->messages['location'][9],
+            ],
+            [
+                "type" => "sticker",
+                "packageId" => '6136',
+                "stickerId" => '51626501'
+            ]
+        ];
     }
 
     // LocationMessage
@@ -208,17 +224,16 @@ class LineService
     public function StampAction($event)
     {
         // GoodJobStampを送信
-        // return new StickerMessageBuilder('11538', '51626501');
-        return [ $this->stampJson() ];
+        return $this->stampFormat('11538', '51626501');
     }
 
-    public function stampJson()
+    public function stampFormat($packageId, $stickerId)
     {
-        return [
+        return [[
             'type' => 'sticker',
-            'packageId' => '11538',
-            'stickerId' => '51626501'
-        ];
+            'packageId' => $packageId,
+            'stickerId' => $stickerId
+        ]];
     }
 
     // UnknownAction
@@ -479,5 +494,16 @@ class LineService
         ];
 
         return $content;
+    }
+
+    public function NGword()
+    {
+        return [
+            'ばか',
+            'バカ',
+            '馬鹿',
+            'あほ',
+            'アホ'
+        ];
     }
 }
