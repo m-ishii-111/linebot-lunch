@@ -116,7 +116,7 @@ class LineController extends Controller
      * @param \LINE\LINEBot\Event\MessageEvent\StickerMessage
      * @return array
      */
-    private function sticker($evnt): array
+    private function sticker($event): array
     {
         return $this->lineService->StampAction($event);
     }
